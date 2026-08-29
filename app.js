@@ -7,7 +7,7 @@
 
 /* ── UPDATE THIS BEFORE GOING LIVE ───────────────────────── */
 const CONFIG = {
-  whatsappNumber: '2348000000000', // ← your number, no + or spaces
+whatsappNumber: '2349052352101',// ← your number, no + or spaces
   siteName: 'thecontainermarket.ng',
 };
 
