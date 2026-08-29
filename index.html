@@ -1,1165 +1,723 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="thecontainermarket.ng — Curated vintage & bargain interior finds. Enquire, offer, and discover one-of-a-kind pieces." />
-  <title>The Container Market · Vintage & Bargain Interiors</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>TCM Admin — The Container Market</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    /* ── TOKENS ────────────────────────────────────── */
-    :root {
-      --ink:       #2B1E12;
-      --ink-soft:  #5C4433;
-      --cream:     #F5EFE0;
-      --cream-alt: #EDE3CE;
-      --parchment: #D9CCAE;
-      --green:     #2A4033;
-      --green-mid: #3B5E48;
-      --green-lt:  #EAF0E8;
-      --terra:     #B03A1A;
-      --terra-lt:  #F7E6DF;
-      --gold:      #9E7B38;
-      --gold-lt:   #F4EBD6;
-      --border:    #C8B99A;
-      --border-dk: #A0896A;
-      --radius:    6px;
-      --radius-lg: 12px;
-      --ff-head:   'Playfair Display', Georgia, serif;
-      --ff-body:   'Lora', Georgia, serif;
-      --ff-mono:   'DM Mono', monospace;
-      --shadow-sm: 0 1px 4px rgba(43,30,18,.10);
-      --shadow-md: 0 4px 18px rgba(43,30,18,.14);
+    :root{
+      --green:#2A4033;--green-lt:#EAF0E8;--terra:#B03A1A;--terra-lt:#F7E6DF;
+      --cream:#F5EFE0;--cream-alt:#EDE3CE;--ink:#2B1E12;--ink-soft:#5C4433;
+      --border:#C8B99A;--radius:8px;--gold:#9E7B38;
+      --ff:'DM Sans',sans-serif;--ffm:'DM Mono',monospace;
     }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--ff);background:#f0ede6;color:var(--ink);min-height:100vh}
+    input,select,textarea,button{font-family:var(--ff);font-size:14px}
 
-    /* ── RESET ─────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--ff-body);
-      background: var(--cream);
-      color: var(--ink);
-      font-size: 16px;
-      line-height: 1.6;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    img { max-width: 100%; display: block; }
-    a { color: inherit; text-decoration: none; }
-    button { cursor: pointer; font-family: inherit; }
+    /* LOGIN */
+    #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--green)}
+    .login-box{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:90%;max-width:360px;text-align:center}
+    .login-logo{font-size:22px;font-weight:500;color:var(--green);margin-bottom:4px}
+    .login-sub{font-family:var(--ffm);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:2rem;opacity:.7}
+    .login-box input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:11px 14px;margin-bottom:.75rem;outline:none;transition:border-color .2s;background:var(--cream)}
+    .login-box input:focus{border-color:var(--green)}
+    .login-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:12px;font-size:14px;font-weight:500;cursor:pointer;transition:background .2s}
+    .login-btn:hover{background:#3B5E48}
+    .login-err{font-size:12px;color:var(--terra);margin-top:.5rem;min-height:18px}
 
-    /* ── GRAIN OVERLAY ─────────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: .028;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 200px;
-    }
+    /* APP SHELL */
+    #app{display:none}
+    .topbar{background:var(--green);color:#fff;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
+    .topbar-logo{font-size:15px;font-weight:500}
+    .topbar-logo span{font-family:var(--ffm);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:.6;display:block;margin-top:2px}
+    .topbar-actions{display:flex;gap:.6rem}
+    .btn-sm{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:6px 12px;font-size:12px;font-family:var(--ffm);cursor:pointer;transition:background .2s}
+    .btn-sm:hover{background:rgba(255,255,255,.2)}
+    .btn-sm.danger{background:rgba(176,58,26,.5);border-color:rgba(176,58,26,.7)}
 
-    /* ── UTILITY ───────────────────────────────────── */
-    .visually-hidden {
-      position: absolute; width: 1px; height: 1px;
-      padding: 0; margin: -1px; overflow: hidden;
-      clip: rect(0,0,0,0); border: 0;
-    }
-    .tag {
-      display: inline-block;
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      letter-spacing: .8px;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      color: var(--ink-soft);
-      background: var(--cream-alt);
-    }
-    .tag--terra { background: var(--terra-lt); border-color: #D9836A; color: var(--terra); }
-    .tag--green { background: var(--green-lt); border-color: #8AB49A; color: var(--green); }
-    .tag--gold  { background: var(--gold-lt); border-color: #C8A96A; color: #7A5A1A; }
+    /* TABS */
+    .tabs{background:#fff;border-bottom:1px solid var(--border);display:flex;gap:0;padding:0 1.25rem}
+    .tab{padding:.85rem 1.1rem;font-size:13px;font-weight:500;color:var(--ink-soft);border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;font-family:var(--ff)}
+    .tab.active{color:var(--green);border-bottom-color:var(--green)}
 
-    /* ── ANIMATIONS ────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes shimmer {
-      0%   { background-position: -200% center; }
-      100% { background-position:  200% center; }
-    }
-    .anim-1 { animation: fadeUp .55s ease both; }
-    .anim-2 { animation: fadeUp .55s .12s ease both; }
-    .anim-3 { animation: fadeUp .55s .24s ease both; }
-    .anim-4 { animation: fadeUp .55s .36s ease both; }
+    /* CONTENT */
+    .content{padding:1.25rem;max-width:900px;margin:0 auto}
 
-    /* ═══════════════════════════════════════════════ */
-    /* SECTION 1 — HERO                               */
-    /* ═══════════════════════════════════════════════ */
-    #hero {
-      position: relative;
-      background: var(--green);
-      color: var(--cream);
-      overflow: hidden;
-      padding: 0;
-    }
+    /* STATS BAR */
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem}
+    .stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+    .stat-val{font-size:28px;font-weight:500;color:var(--green)}
+    .stat-lbl{font-size:11px;font-family:var(--ffm);color:var(--ink-soft);margin-top:2px;letter-spacing:.4px}
 
-    /* Decorative ruled lines */
-    #hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 38px,
-        rgba(245,239,224,.04) 38px,
-        rgba(245,239,224,.04) 39px
-      );
-    }
+    /* ADD PRODUCT FORM */
+    .form-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+    .form-card h2{font-size:17px;font-weight:500;color:var(--ink);margin-bottom:1.25rem}
+    .form-grid{display:grid;gap:.85rem}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .field label{display:block;font-family:var(--ffm);font-size:10px;letter-spacing:.7px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px}
+    .field input,.field select,.field textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;background:var(--cream);color:var(--ink);outline:none;transition:border-color .2s}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green)}
+    .field textarea{min-height:70px;resize:vertical}
 
-    .hero-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid rgba(245,239,224,.14);
-      position: relative;
-      z-index: 2;
-    }
+    /* PHOTO UPLOAD */
+    .photo-drop{border:2px dashed var(--border);border-radius:var(--radius);padding:2rem 1rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--cream);position:relative}
+    .photo-drop:hover,.photo-drop.dragover{border-color:var(--green);background:var(--green-lt)}
+    .photo-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .photo-drop-icon{font-size:32px;margin-bottom:.5rem}
+    .photo-drop-text{font-size:13px;color:var(--ink-soft)}
+    .photo-drop-hint{font-size:11px;color:var(--ink-soft);opacity:.7;margin-top:4px;font-family:var(--ffm)}
+    .photo-preview{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--radius);margin-top:.75rem;display:none;border:1px solid var(--border)}
 
-    .logo {
-      font-family: var(--ff-head);
-      font-size: 15px;
-      font-style: italic;
-      letter-spacing: .2px;
-      color: var(--cream);
-      line-height: 1.2;
-    }
-    .logo span {
-      display: block;
-      font-style: normal;
-      font-size: 9px;
-      font-family: var(--ff-mono);
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      color: var(--parchment);
-      margin-top: 2px;
-    }
+    /* AI ENHANCE TOGGLE */
+    .enhance-row{display:flex;align-items:center;gap:.6rem;margin-top:.5rem}
+    .toggle{width:38px;height:22px;background:var(--border);border-radius:11px;position:relative;cursor:pointer;transition:background .2s;border:none;flex-shrink:0}
+    .toggle.on{background:var(--green)}
+    .toggle::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
+    .toggle.on::after{transform:translateX(16px)}
+    .enhance-label{font-size:13px;color:var(--ink-soft)}
 
-    .topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-    }
-    .topbar-actions button {
-      background: rgba(245,239,224,.1);
-      border: 1px solid rgba(245,239,224,.2);
-      color: var(--cream);
-      border-radius: var(--radius);
-      padding: 7px 12px;
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      letter-spacing: .4px;
-      transition: background .2s;
-    }
-    .topbar-actions button:hover { background: rgba(245,239,224,.18); }
-    #btn-wishlist svg, #btn-menu svg { vertical-align: middle; }
+    /* SUBMIT */
+    .btn-publish{background:var(--terra);color:#fff;border:none;border-radius:var(--radius);padding:13px 24px;font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-top:.5rem;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-publish:hover{background:#922F12}
+    .btn-publish:disabled{background:var(--border);cursor:not-allowed}
+    .btn-publish .spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* hero body */
-    .hero-body {
-      position: relative;
-      z-index: 2;
-      padding: 2.5rem 1.25rem 1.5rem;
-    }
+    /* PRODUCT TABLE */
+    .product-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .product-table th{background:var(--cream-alt);font-family:var(--ffm);font-size:10px;letter-spacing:.7px;text-transform:uppercase;color:var(--ink-soft);padding:.75rem 1rem;text-align:left;font-weight:400}
+    .product-table td{padding:.75rem 1rem;border-top:1px solid var(--border);font-size:13px;vertical-align:middle}
+    .product-table tr:hover td{background:var(--cream)}
+    .thumb{width:44px;height:58px;object-fit:cover;border-radius:4px;border:1px solid var(--border)}
+    .thumb-placeholder{width:44px;height:58px;background:var(--cream-alt);border-radius:4px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px}
+    .badge{font-family:var(--ffm);font-size:9px;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:20px;font-weight:500}
+    .badge-offer{background:var(--terra-lt);color:var(--terra)}
+    .badge-new{background:var(--green-lt);color:var(--green)}
+    .badge-rare{background:#F4EBD6;color:var(--gold)}
+    .price{font-family:var(--ffm);font-size:13px;color:var(--green)}
+    .cat-chip{background:var(--cream-alt);border:1px solid var(--border);border-radius:20px;padding:2px 8px;font-size:11px;font-family:var(--ffm);color:var(--ink-soft)}
+    .action-btns{display:flex;gap:.4rem}
+    .btn-edit{background:var(--green-lt);border:1px solid #8AB49A;color:var(--green);border-radius:4px;padding:4px 10px;font-size:11px;font-family:var(--ffm);cursor:pointer;transition:background .2s}
+    .btn-edit:hover{background:#c3d9cb}
+    .btn-del{background:var(--terra-lt);border:1px solid #D9836A;color:var(--terra);border-radius:4px;padding:4px 10px;font-size:11px;font-family:var(--ffm);cursor:pointer;transition:background .2s}
+    .btn-del:hover{background:#f0c4b0}
+    .empty-state{text-align:center;padding:3rem 1rem;color:var(--ink-soft);font-size:14px}
+    .empty-icon{font-size:40px;margin-bottom:.75rem}
 
-    .hero-eyebrow {
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--parchment);
-      margin-bottom: .75rem;
-    }
+    /* TOAST */
+    .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(10px);background:var(--green);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-family:var(--ffm);opacity:0;transition:all .25s;z-index:9999;white-space:nowrap;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--terra)}
 
-    .hero-headline {
-      font-family: var(--ff-head);
-      font-size: clamp(28px, 8vw, 38px);
-      font-weight: 700;
-      line-height: 1.15;
-      color: var(--cream);
-      margin-bottom: 1rem;
-    }
-    .hero-headline em {
-      font-style: italic;
-      color: var(--parchment);
-    }
+    /* EXPORT SECTION */
+    .export-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+    .export-card h2{font-size:17px;font-weight:500;margin-bottom:.5rem}
+    .export-card p{font-size:13px;color:var(--ink-soft);margin-bottom:1.25rem;line-height:1.6}
+    .btn-export{background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:11px 20px;font-size:13px;font-weight:500;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:6px}
+    .btn-export:hover{background:#3B5E48}
+    .step{background:var(--cream-alt);border-radius:var(--radius);padding:1rem;margin-top:1rem;font-size:13px;line-height:1.7;color:var(--ink-soft)}
+    .step strong{color:var(--ink)}
+    .step code{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:var(--ffm);font-size:12px}
 
-    .hero-sub {
-      font-size: 14px;
-      color: var(--parchment);
-      max-width: 340px;
-      line-height: 1.65;
-      margin-bottom: 1.75rem;
-    }
+    /* SEARCH */
+    .search-bar{margin-bottom:1rem}
+    .search-bar input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;background:#fff;color:var(--ink);outline:none;font-size:14px;transition:border-color .2s}
+    .search-bar input:focus{border-color:var(--green)}
 
-    /* search bar */
-    .hero-search {
-      display: flex;
-      gap: 0;
-      border: 1.5px solid rgba(245,239,224,.25);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      background: rgba(245,239,224,.08);
-      backdrop-filter: blur(4px);
-      margin-bottom: 1.5rem;
-    }
-    #input-search {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      padding: 13px 14px;
-      font-family: var(--ff-body);
-      font-size: 14px;
-      color: var(--cream);
-    }
-    #input-search::placeholder { color: rgba(245,239,224,.45); }
-    .hero-search button {
-      background: var(--terra);
-      border: none;
-      color: #fff;
-      padding: 13px 18px;
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-      transition: background .2s;
-    }
-    .hero-search button:hover { background: #922F12; }
+    /* EDIT MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(43,30,18,.55);z-index:1000;display:none;align-items:flex-end;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal-sheet{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:1.5rem}
+    .modal-sheet h3{font-size:17px;font-weight:500;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between}
+    .modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--ink-soft)}
 
-    /* stat pills */
-    .hero-stats {
-      display: flex;
-      gap: .75rem;
-      flex-wrap: wrap;
-    }
-    .stat-pill {
-      background: rgba(245,239,224,.08);
-      border: 1px solid rgba(245,239,224,.16);
-      border-radius: 20px;
-      padding: 5px 13px;
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      color: var(--parchment);
-    }
-    .stat-pill strong {
-      color: var(--cream);
-      font-size: 13px;
-    }
-
-    /* decorative corner stamp */
-    .hero-stamp {
-      position: absolute;
-      right: -10px;
-      bottom: -10px;
-      width: 130px;
-      height: 130px;
-      opacity: .07;
-      z-index: 1;
-    }
-
-    /* hero filter chips */
-    .hero-filters {
-      padding: .75rem 1.25rem;
-      display: flex;
-      gap: .5rem;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      border-top: 1px solid rgba(245,239,224,.1);
-      position: relative;
-      z-index: 2;
-    }
-    .hero-filters::-webkit-scrollbar { display: none; }
-    .filter-chip {
-      flex-shrink: 0;
-      background: rgba(245,239,224,.08);
-      border: 1px solid rgba(245,239,224,.2);
-      color: var(--parchment);
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      letter-spacing: .3px;
-      transition: all .2s;
-      white-space: nowrap;
-    }
-    .filter-chip:hover,
-    .filter-chip[aria-pressed="true"] {
-      background: var(--terra);
-      border-color: var(--terra);
-      color: #fff;
-    }
-
-    /* ═══════════════════════════════════════════════ */
-    /* SECTION 2 — MAIN                               */
-    /* ═══════════════════════════════════════════════ */
-    #main {
-      padding: 1.75rem 1.25rem 2rem;
-    }
-
-    /* ── insights panel ── */
-    #insights-panel {
-      background: var(--green);
-      color: var(--cream);
-      border-radius: var(--radius-lg);
-      padding: 1.1rem 1.25rem;
-      margin-bottom: 1.75rem;
-      display: flex;
-      align-items: flex-start;
-      gap: .85rem;
-      position: relative;
-      overflow: hidden;
-    }
-    #insights-panel::before {
-      content: '';
-      position: absolute;
-      top: -20px; right: -20px;
-      width: 100px; height: 100px;
-      border-radius: 50%;
-      background: rgba(245,239,224,.06);
-    }
-    .insights-icon {
-      font-size: 22px;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .insights-text { flex: 1; }
-    .insights-label {
-      font-family: var(--ff-mono);
-      font-size: 9px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--parchment);
-      margin-bottom: 3px;
-    }
-    .insights-msg {
-      font-size: 13px;
-      line-height: 1.55;
-      color: var(--cream);
-    }
-    .insights-msg strong { color: var(--parchment); }
-    #insights-refresh {
-      background: rgba(245,239,224,.12);
-      border: 1px solid rgba(245,239,224,.2);
-      color: var(--parchment);
-      border-radius: var(--radius);
-      padding: 5px 10px;
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      flex-shrink: 0;
-      align-self: center;
-      transition: background .2s;
-    }
-    #insights-refresh:hover { background: rgba(245,239,224,.2); }
-
-    /* ── section heading ── */
-    .section-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-    .section-head h2 {
-      font-family: var(--ff-head);
-      font-size: 20px;
-      font-weight: 500;
-      color: var(--ink);
-    }
-    .section-head h2 em { font-style: italic; color: var(--ink-soft); }
-    .section-head a {
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      letter-spacing: .4px;
-      color: var(--terra);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    /* ── product list grid ── */
-    #list-root {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .85rem;
-      list-style: none;
-    }
-
-    /* product card */
-    .product-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: box-shadow .22s, transform .22s;
-      position: relative;
-    }
-    .product-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-    }
-
-    /* product image */
-    .card-img {
-      aspect-ratio: 3/4;
-      background: var(--cream-alt);
-      position: relative;
-      overflow: hidden;
-    }
-    .card-img img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      transition: transform .35s ease;
-    }
-    .product-card:hover .card-img img { transform: scale(1.04); }
-    .card-img-fallback {
-      position: absolute;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 4px;
-      background: var(--cream-alt);
-    }
-    .card-img-icon {
-      font-size: 28px;
-      opacity: .5;
-    }
-    .card-img-label {
-      font-family: var(--ff-mono);
-      font-size: 9px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      opacity: .7;
-    }
-    .card-badge {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      font-family: var(--ff-mono);
-      font-size: 9px;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 20px;
-      font-weight: 500;
-    }
-    .card-badge--offer  { background: var(--terra); color: #fff; }
-    .card-badge--new    { background: var(--green); color: var(--cream); }
-    .card-badge--rare   { background: var(--gold); color: #fff; }
-
-    .card-wishlist {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(255,255,255,.82);
-      border: none;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      transition: background .2s;
-    }
-    .card-wishlist:hover { background: #fff; }
-
-    .card-body {
-      padding: .7rem .85rem .85rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .card-name {
-      font-family: var(--ff-head);
-      font-size: 13.5px;
-      font-weight: 500;
-      line-height: 1.3;
-      color: var(--ink);
-      margin-bottom: 3px;
-    }
-    .card-origin {
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      color: var(--ink-soft);
-      letter-spacing: .3px;
-      margin-bottom: 6px;
-    }
-    .card-price-row {
-      display: flex;
-      align-items: baseline;
-      gap: 5px;
-      margin-bottom: 8px;
-    }
-    .card-price {
-      font-family: var(--ff-mono);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--green);
-    }
-    .card-price-orig {
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      color: var(--border-dk);
-      text-decoration: line-through;
-    }
-    .card-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .4rem;
-      margin-top: auto;
-    }
-    .btn-enquire {
-      background: var(--green);
-      color: var(--cream);
-      border: none;
-      border-radius: var(--radius);
-      padding: 8px 6px;
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      letter-spacing: .3px;
-      text-align: center;
-      transition: background .2s;
-    }
-    .btn-enquire:hover { background: var(--green-mid); }
-    .btn-offer {
-      background: transparent;
-      color: var(--terra);
-      border: 1px solid var(--terra);
-      border-radius: var(--radius);
-      padding: 8px 6px;
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      letter-spacing: .3px;
-      text-align: center;
-      transition: all .2s;
-    }
-    .btn-offer:hover { background: var(--terra); color: #fff; }
-
-    /* ── make an offer modal strip ── */
-    #offer-strip {
-      background: var(--terra-lt);
-      border: 1px solid #D9836A;
-      border-radius: var(--radius-lg);
-      padding: 1.1rem 1.25rem;
-      margin: 1.5rem 0;
-      display: none;
-    }
-    #offer-strip.open { display: block; }
-    #offer-strip h3 {
-      font-family: var(--ff-head);
-      font-size: 16px;
-      color: var(--terra);
-      margin-bottom: .75rem;
-    }
-    .offer-form { display: grid; gap: .6rem; }
-    #input-offer-item, #input-offer-amount, #input-offer-name, #input-offer-wa {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px 12px;
-      font-family: var(--ff-body);
-      font-size: 14px;
-      background: #fff;
-      color: var(--ink);
-      outline: none;
-      transition: border-color .2s;
-    }
-    #input-offer-item:focus,
-    #input-offer-amount:focus,
-    #input-offer-name:focus,
-    #input-offer-wa:focus {
-      border-color: var(--terra);
-    }
-    .offer-form label {
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      margin-bottom: 3px;
-      display: block;
-    }
-    #btn-primary {
-      background: var(--terra);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: 12px;
-      font-family: var(--ff-mono);
-      font-size: 12px;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-      width: 100%;
-      margin-top: .25rem;
-      transition: background .2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    #btn-primary:hover { background: #92300F; }
-    #btn-primary svg { flex-shrink: 0; }
-
-    /* ── vendor upload CTA ── */
-    #vendor-cta {
-      margin-top: 1.75rem;
-      background: var(--cream-alt);
-      border: 1.5px dashed var(--border-dk);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-      text-align: center;
-    }
-    #vendor-cta h3 {
-      font-family: var(--ff-head);
-      font-size: 17px;
-      font-style: italic;
-      color: var(--ink);
-      margin-bottom: .4rem;
-    }
-    #vendor-cta p {
-      font-size: 13px;
-      color: var(--ink-soft);
-      margin-bottom: 1rem;
-      line-height: 1.55;
-    }
-    .vendor-actions {
-      display: flex;
-      gap: .65rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn-vendor {
-      background: var(--green);
-      color: var(--cream);
-      border: none;
-      border-radius: var(--radius);
-      padding: 10px 18px;
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      transition: background .2s;
-    }
-    .btn-vendor:hover { background: var(--green-mid); }
-    .btn-vendor-wa {
-      background: #25D366;
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: 10px 18px;
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      transition: opacity .2s;
-    }
-    .btn-vendor-wa:hover { opacity: .88; }
-
-    /* ═══════════════════════════════════════════════ */
-    /* SECTION 3 — FOOTER                             */
-    /* ═══════════════════════════════════════════════ */
-    #footer {
-      background: var(--ink);
-      color: var(--parchment);
-      padding: 2rem 1.25rem 1.5rem;
-    }
-
-    .footer-logo {
-      font-family: var(--ff-head);
-      font-size: 18px;
-      font-style: italic;
-      color: var(--cream);
-      margin-bottom: 4px;
-    }
-    .footer-tagline {
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--parchment);
-      margin-bottom: 1.25rem;
-      opacity: .7;
-    }
-    .footer-divider {
-      border: none;
-      border-top: 1px solid rgba(245,239,224,.12);
-      margin-bottom: 1.25rem;
-    }
-
-    .footer-newsletter { margin-bottom: 1.5rem; }
-    .footer-newsletter p {
-      font-size: 13px;
-      color: var(--parchment);
-      margin-bottom: .65rem;
-      opacity: .75;
-    }
-    .nl-row {
-      display: flex;
-      gap: 0;
-      border: 1px solid rgba(245,239,224,.2);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-    #input-email {
-      flex: 1;
-      background: rgba(245,239,224,.06);
-      border: none;
-      outline: none;
-      padding: 10px 12px;
-      font-family: var(--ff-body);
-      font-size: 13px;
-      color: var(--cream);
-    }
-    #input-email::placeholder { color: rgba(245,239,224,.35); }
-    .nl-btn {
-      background: var(--terra);
-      border: none;
-      color: #fff;
-      padding: 10px 14px;
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      letter-spacing: .4px;
-      text-transform: uppercase;
-      transition: background .2s;
-    }
-    .nl-btn:hover { background: #92300F; }
-
-    .footer-links {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .35rem 1rem;
-      margin-bottom: 1.25rem;
-    }
-    .footer-links a {
-      font-size: 13px;
-      color: var(--parchment);
-      opacity: .65;
-      transition: opacity .2s;
-    }
-    .footer-links a:hover { opacity: 1; }
-
-    .footer-social {
-      display: flex;
-      gap: .65rem;
-      margin-bottom: 1.25rem;
-    }
-    .social-btn {
-      background: rgba(245,239,224,.08);
-      border: 1px solid rgba(245,239,224,.16);
-      color: var(--parchment);
-      border-radius: var(--radius);
-      padding: 7px 12px;
-      font-family: var(--ff-mono);
-      font-size: 11px;
-      letter-spacing: .3px;
-      transition: background .2s;
-    }
-    .social-btn:hover { background: rgba(245,239,224,.16); }
-
-    .footer-copy {
-      font-family: var(--ff-mono);
-      font-size: 10px;
-      letter-spacing: .4px;
-      color: var(--parchment);
-      opacity: .4;
-      text-align: center;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(245,239,224,.08);
-    }
-
-    /* ── floating WhatsApp ── */
-    #wa-float {
-      position: fixed;
-      bottom: 1.25rem;
-      right: 1.25rem;
-      z-index: 1000;
-      background: #25D366;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 12px 18px;
-      font-family: var(--ff-mono);
-      font-size: 12px;
-      letter-spacing: .3px;
-      box-shadow: 0 4px 20px rgba(37,211,102,.35);
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      transition: transform .2s, box-shadow .2s;
-    }
-    #wa-float:hover {
-      transform: scale(1.04);
-      box-shadow: 0 6px 26px rgba(37,211,102,.45);
-    }
-
-    /* ─── responsive ≥ 420px ── */
-    @media (min-width: 420px) {
-      #list-root { grid-template-columns: 1fr 1fr; gap: 1rem; }
-    }
-    @media (min-width: 600px) {
-      #list-root { grid-template-columns: repeat(3, 1fr); }
-    }
+    @media(min-width:600px){.form-row{grid-template-columns:1fr 1fr 1fr}}
   </style>
 </head>
 <body>
 
-<!-- ╔══════════════════════════════════════════╗ -->
-<!-- ║  HERO                                    ║ -->
-<!-- ╚══════════════════════════════════════════╝ -->
-<header id="hero" role="banner">
-  <nav class="hero-topbar" aria-label="Site navigation">
-    <div class="logo" aria-label="The Container Market">
-      The Container Market
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">The Container Market</div>
+    <div class="login-sub">Admin Panel</div>
+    <input id="login-pass" type="password" placeholder="Enter admin password" autocomplete="current-password"/>
+    <button class="login-btn" onclick="doLogin()">Sign in</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-logo">
+      TCM Admin
       <span>thecontainermarket.ng</span>
     </div>
     <div class="topbar-actions">
-      <button id="btn-wishlist" aria-label="View wishlist">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        Saved
-      </button>
-      <button id="btn-menu" aria-label="Open menu" aria-expanded="false">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-    </div>
-  </nav>
-
-  <div class="hero-body">
-    <p class="hero-eyebrow anim-1">Lagos · Abuja · Port Harcourt</p>
-    <h1 class="hero-headline anim-2">
-      Rare finds.<br>
-      <em>Real bargains.</em><br>
-      Delivered.
-    </h1>
-    <p class="hero-sub anim-3">
-      Curated vintage &amp; pre-loved interior pieces — furniture, art, décor — direct from sellers. Make an offer. Enquire on WhatsApp.
-    </p>
-
-    <div class="hero-search anim-4" role="search">
-      <label for="input-search" class="visually-hidden">Search for pieces</label>
-      <input
-        id="input-search"
-        type="search"
-        placeholder="Search: mid-century chairs, rattan…"
-        autocomplete="off"
-        aria-label="Search products"
-      />
-      <button type="button" aria-label="Submit search">Search</button>
-    </div>
-
-    <div class="hero-stats anim-4" aria-label="Marketplace stats">
-      <div class="stat-pill"><strong>340+</strong> Active listings</div>
-      <div class="stat-pill"><strong>₦500 – ₦2M</strong> Price range</div>
-      <div class="stat-pill"><strong>Same-day</strong> WA leads</div>
-    </div>
-
-    <!-- decorative stamp -->
-    <svg class="hero-stamp" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-      <circle cx="60" cy="60" r="56" stroke="#F5EFE0" stroke-width="2" stroke-dasharray="4 3"/>
-      <circle cx="60" cy="60" r="44" stroke="#F5EFE0" stroke-width="1"/>
-      <text x="60" y="55" text-anchor="middle" font-size="9" fill="#F5EFE0" font-family="serif" letter-spacing="2">VERIFIED</text>
-      <text x="60" y="70" text-anchor="middle" font-size="9" fill="#F5EFE0" font-family="serif" letter-spacing="2">VINTAGE</text>
-    </svg>
-  </div>
-
-  <div class="hero-filters" role="group" aria-label="Filter by category">
-    <button class="filter-chip" aria-pressed="true" data-filter="all">All pieces</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="furniture">Furniture</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="art">Art &amp; Prints</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="lighting">Lighting</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="textiles">Textiles</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="ceramics">Ceramics</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="outdoor">Outdoor</button>
-  </div>
-</header>
-
-<!-- ╔══════════════════════════════════════════╗ -->
-<!-- ║  MAIN                                    ║ -->
-<!-- ╚══════════════════════════════════════════╝ -->
-<main id="main">
-
-  <!-- Insights panel -->
-  <section id="insights-panel" aria-label="Market insights">
-    <span class="insights-icon" aria-hidden="true">✦</span>
-    <div class="insights-text">
-      <div class="insights-label">Today's insight</div>
-      <p class="insights-msg">
-        <strong>Rattan &amp; wicker</strong> are trending in Lagos this week — 12 new listings added. Check the Furniture filter for the best deals.
-      </p>
-    </div>
-    <button id="insights-refresh" aria-label="Refresh insights">↺ New</button>
-  </section>
-
-  <!-- Product grid heading -->
-  <div class="section-head">
-    <h2>Fresh <em>arrivals</em></h2>
-    <a href="#list-root">See all →</a>
-  </div>
-
-  <!-- Product list -->
-  <ul id="list-root" aria-label="Product listings">
-
-    <!-- Card 1 -->
-    <li class="product-card" data-category="furniture">
-      <div class="card-img">
-        <img src="images/product-1.jpg" alt="Yoruba Lounge Chair — vintage armchair, Lagos Island 1970s" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-        <div class="card-img-fallback" aria-hidden="true">
-          <span class="card-img-icon">🪑</span>
-          <span class="card-img-label">Add product-1.jpg</span>
-        </div>
-        <span class="card-badge card-badge--offer" aria-label="Make offer">Offer</span>
-        <button class="card-wishlist" aria-label="Save Yoruba Lounge Chair to wishlist">🤍</button>
-      </div>
-      <div class="card-body">
-        <div class="card-name">Yoruba Lounge Chair</div>
-        <div class="card-origin">Lagos Island · 1970s</div>
-        <div class="card-price-row">
-          <span class="card-price">₦85,000</span>
-          <span class="card-price-orig">₦120,000</span>
-        </div>
-        <div class="card-actions">
-          <button class="btn-enquire" data-wa="Yoruba+Lounge+Chair+%E2%82%A685%2C000" aria-label="Enquire about Yoruba Lounge Chair on WhatsApp">WA Enquire</button>
-          <button class="btn-offer" data-product="Yoruba Lounge Chair" data-price="85000" aria-label="Make an offer on Yoruba Lounge Chair">Make Offer</button>
-        </div>
-      </div>
-    </li>
-
-    <!-- Card 2 -->
-    <li class="product-card" data-category="ceramics">
-      <div class="card-img">
-        <img src="images/product-2.jpg" alt="Benin Terracotta Vase — handmade ceramic, Benin City" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-        <div class="card-img-fallback" aria-hidden="true">
-          <span class="card-img-icon">🏺</span>
-          <span class="card-img-label">Add product-2.jpg</span>
-        </div>
-        <span class="card-badge card-badge--new" aria-label="New listing">New</span>
-        <button class="card-wishlist" aria-label="Save Benin Terracotta Vase to wishlist">🤍</button>
-      </div>
-      <div class="card-body">
-        <div class="card-name">Benin Terracotta Vase</div>
-        <div class="card-origin">Benin City · Handmade</div>
-        <div class="card-price-row">
-          <span class="card-price">₦24,500</span>
-        </div>
-        <div class="card-actions">
-          <button class="btn-enquire" data-wa="Benin+Terracotta+Vase+%E2%82%A624%2C500" aria-label="Enquire about Benin Terracotta Vase on WhatsApp">WA Enquire</button>
-          <button class="btn-offer" data-product="Benin Terracotta Vase" data-price="24500" aria-label="Make an offer on Benin Terracotta Vase">Make Offer</button>
-        </div>
-      </div>
-    </li>
-
-    <!-- Card 3 -->
-    <li class="product-card" data-category="lighting">
-      <div class="card-img">
-        <img src="images/product-3.jpg" alt="Brass Sputnik Pendant — vintage ceiling light, Ikoyi 1960s" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-        <div class="card-img-fallback" aria-hidden="true">
-          <span class="card-img-icon">🪔</span>
-          <span class="card-img-label">Add product-3.jpg</span>
-        </div>
-        <span class="card-badge card-badge--rare" aria-label="Rare find">Rare</span>
-        <button class="card-wishlist" aria-label="Save Brass Sputnik Pendant to wishlist">🤍</button>
-      </div>
-      <div class="card-body">
-        <div class="card-name">Brass Sputnik Pendant</div>
-        <div class="card-origin">Ikoyi · 1960s</div>
-        <div class="card-price-row">
-          <span class="card-price">₦195,000</span>
-          <span class="card-price-orig">₦250,000</span>
-        </div>
-        <div class="card-actions">
-          <button class="btn-enquire" data-wa="Brass+Sputnik+Pendant+%E2%82%A6195%2C000" aria-label="Enquire about Brass Sputnik Pendant on WhatsApp">WA Enquire</button>
-          <button class="btn-offer" data-product="Brass Sputnik Pendant" data-price="195000" aria-label="Make an offer on Brass Sputnik Pendant">Make Offer</button>
-        </div>
-      </div>
-    </li>
-
-    <!-- Card 4 -->
-    <li class="product-card" data-category="textiles">
-      <div class="card-img">
-        <img src="images/product-4.jpg" alt="Aso-oke Wall Tapestry — hand-woven textile, Oshogbo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-        <div class="card-img-fallback" aria-hidden="true">
-          <span class="card-img-icon">🧵</span>
-          <span class="card-img-label">Add product-4.jpg</span>
-        </div>
-        <span class="card-badge card-badge--offer" aria-label="Make offer">Offer</span>
-        <button class="card-wishlist" aria-label="Save Aso-oke Wall Tapestry to wishlist">🤍</button>
-      </div>
-      <div class="card-body">
-        <div class="card-name">Aso-oke Wall Tapestry</div>
-        <div class="card-origin">Oshogbo · Hand-woven</div>
-        <div class="card-price-row">
-          <span class="card-price">₦38,000</span>
-        </div>
-        <div class="card-actions">
-          <button class="btn-enquire" data-wa="Aso-oke+Wall+Tapestry+%E2%82%A638%2C000" aria-label="Enquire about Aso-oke Wall Tapestry on WhatsApp">WA Enquire</button>
-          <button class="btn-offer" data-product="Aso-oke Wall Tapestry" data-price="38000" aria-label="Make an offer on Aso-oke Wall Tapestry">Make Offer</button>
-        </div>
-      </div>
-    </li>
-
-    <!-- Card 5 -->
-    <li class="product-card" data-category="art">
-      <div class="card-img">
-        <img src="images/product-5.jpg" alt="Lagos Market Scene — limited art print, Surulere" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-        <div class="card-img-fallback" aria-hidden="true">
-          <span class="card-img-icon">🖼</span>
-          <span class="card-img-label">Add product-5.jpg</span>
-        </div>
-        <span class="card-badge card-badge--new" aria-label="New listing">New</span>
-        <button class="card-wishlist" aria-label="Save Lagos Market Scene Print to wishlist">🤍</button>
-      </div>
-      <div class="card-body">
-        <div class="card-name">Lagos Market Scene</div>
-        <div class="card-origin">Surulere · Limited print</div>
-        <div class="card-price-row">
-          <span class="card-price">₦15,000</span>
-        </div>
-        <div class="card-actions">
-          <button class="btn-enquire" data-wa="Lagos+Market+Scene+Print+%E2%82%A615%2C000" aria-label="Enquire about Lagos Market Scene Print on WhatsApp">WA Enquire</button>
-          <button class="btn-offer" data-product="Lagos Market Scene Print" data-price="15000" aria-label="Make an offer on Lagos Market Scene Print">Make Offer</button>
-        </div>
-      </div>
-    </li>
-
-    <!-- Card 6 -->
-    <li class="product-card" data-category="furniture">
-      <div class="card-img">
-        <img src="images/product-6.jpg" alt="Rattan Peacock Chair — vintage wicker chair, Victoria Island 1980s" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-        <div class="card-img-fallback" aria-hidden="true">
-          <span class="card-img-icon">🛋</span>
-          <span class="card-img-label">Add product-6.jpg</span>
-        </div>
-        <span class="card-badge card-badge--rare" aria-label="Rare find">Rare</span>
-        <button class="card-wishlist" aria-label="Save Rattan Peacock Chair to wishlist">🤍</button>
-      </div>
-      <div class="card-body">
-        <div class="card-name">Rattan Peacock Chair</div>
-        <div class="card-origin">Victoria Island · 1980s</div>
-        <div class="card-price-row">
-          <span class="card-price">₦145,000</span>
-          <span class="card-price-orig">₦180,000</span>
-        </div>
-        <div class="card-actions">
-          <button class="btn-enquire" data-wa="Rattan+Peacock+Chair+%E2%82%A6145%2C000" aria-label="Enquire about Rattan Peacock Chair on WhatsApp">WA Enquire</button>
-          <button class="btn-offer" data-product="Rattan Peacock Chair" data-price="145000" aria-label="Make an offer on Rattan Peacock Chair">Make Offer</button>
-        </div>
-      </div>
-    </li>
-
-  </ul>
-
-  <!-- Make an offer strip (modal alternative, no fixed needed) -->
-  <section id="offer-strip" aria-live="polite" aria-label="Make an offer form">
-    <h3>Make an offer</h3>
-    <div class="offer-form">
-      <div>
-        <label for="input-offer-item">Item</label>
-        <input id="input-offer-item" type="text" placeholder="Yoruba Lounge Chair" readonly aria-required="true" />
-      </div>
-      <div>
-        <label for="input-offer-amount">Your offer (₦)</label>
-        <input id="input-offer-amount" type="number" placeholder="e.g. 70000" min="1000" aria-required="true" />
-      </div>
-      <div>
-        <label for="input-offer-name">Your name</label>
-        <input id="input-offer-name" type="text" placeholder="Chioma A." autocomplete="name" aria-required="true" />
-      </div>
-      <div>
-        <label for="input-offer-wa">WhatsApp number</label>
-        <input id="input-offer-wa" type="tel" placeholder="+234 800 000 0000" autocomplete="tel" aria-required="true" />
-      </div>
-      <button id="btn-primary" type="button" aria-label="Send offer via WhatsApp">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.554 4.124 1.528 5.855L0 24l6.335-1.512A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.638-.504-5.15-1.385l-.37-.22-3.762.898.938-3.65-.24-.383A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-        Send offer via WhatsApp
-      </button>
-    </div>
-  </section>
-
-  <!-- Vendor CTA -->
-  <aside id="vendor-cta" aria-label="Sell on The Container Market">
-    <h3>Got a piece to sell?</h3>
-    <p>Upload a photo or forward a WhatsApp description. We'll list it for you — same day.</p>
-    <div class="vendor-actions">
-      <button class="btn-vendor" id="btn-vendor-upload" aria-label="Upload a listing">📷 Upload listing</button>
-      <a class="btn-vendor-wa" href="https://wa.me/2348000000000?text=Hi%2C+I%27d+like+to+list+an+item+on+thecontainermarket.ng" target="_blank" rel="noopener noreferrer" aria-label="List via WhatsApp">💬 List via WhatsApp</a>
-    </div>
-  </aside>
-
-</main>
-
-<!-- ╔══════════════════════════════════════════╗ -->
-<!-- ║  FOOTER                                  ║ -->
-<!-- ╚══════════════════════════════════════════╝ -->
-<footer id="footer" role="contentinfo">
-  <div class="footer-logo">The Container Market</div>
-  <p class="footer-tagline">Vintage &amp; Bargain Interiors · Nigeria</p>
-  <hr class="footer-divider" />
-
-  <!-- Newsletter -->
-  <div class="footer-newsletter">
-    <p>New arrivals, curated weekly. No spam.</p>
-    <div class="nl-row">
-      <label for="input-email" class="visually-hidden">Email address</label>
-      <input id="input-email" type="email" placeholder="your@email.com" autocomplete="email" aria-label="Email address for newsletter" />
-      <button class="nl-btn" type="button" aria-label="Subscribe to newsletter">Subscribe</button>
+      <button class="btn-sm" onclick="window.open('index.html','_blank')">View site ↗</button>
+      <button class="btn-sm danger" onclick="doLogout()">Sign out</button>
     </div>
   </div>
 
-  <!-- Links -->
-  <nav aria-label="Footer links">
-    <div class="footer-links">
-      <a href="#">How it works</a>
-      <a href="#">Sell with us</a>
-      <a href="#">Wishlist</a>
-      <a href="#">Make an offer</a>
-      <a href="#">Delivery &amp; pickup</a>
-      <a href="#">FAQs</a>
-      <a href="#">Paystack secure</a>
-      <a href="#">Contact</a>
-    </div>
-  </nav>
-
-  <!-- Social -->
-  <div class="footer-social" aria-label="Social media">
-    <a class="social-btn" href="https://instagram.com/thecontainermarket.ng" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram">📸 Instagram</a>
-    <a class="social-btn" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook">📘 Facebook</a>
-    <a class="social-btn" href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">💬 WhatsApp</a>
+  <div class="tabs">
+    <button class="tab active" data-tab="add" onclick="switchTab('add',this)">Add product</button>
+    <button class="tab" data-tab="manage" onclick="switchTab('manage',this)">Manage (0)</button>
+    <button class="tab" data-tab="publish" onclick="switchTab('publish',this)">Publish & export</button>
   </div>
 
-  <p class="footer-copy">© 2026 thecontainermarket.ng — All rights reserved</p>
-</footer>
+  <!-- ── ADD PRODUCT TAB ── -->
+  <div class="content" id="tab-add">
+    <div class="stats" id="stats-bar">
+      <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div class="stat-lbl">Products</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-cats">0</div><div class="stat-lbl">Categories</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-value">₦0</div><div class="stat-lbl">Total value</div></div>
+    </div>
 
-<!-- Floating WhatsApp button -->
-<button id="wa-float" aria-label="Chat with us on WhatsApp">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.554 4.124 1.528 5.855L0 24l6.335-1.512A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.638-.504-5.15-1.385l-.37-.22-3.762.898.938-3.65-.24-.383A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-  Chat with us
-</button>
+    <div class="form-card">
+      <h2>Add new product</h2>
+      <div class="form-grid">
 
-<script src="app.js"></script>
+        <!-- Photo upload -->
+        <div class="field">
+          <label>Product photo</label>
+
+          <!-- Hidden real file input — triggered by the button below -->
+          <input type="file" id="photo-input" accept="image/*" capture="environment"
+                 style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"
+                 onchange="onPhotoSelect(event)"/>
+
+          <!-- Preview box (shown after photo chosen) -->
+          <div id="photo-preview-wrap" style="display:none;margin-bottom:.75rem">
+            <img id="photo-preview" class="photo-preview" alt="Preview"
+                 style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;border:1px solid var(--border)"/>
+            <button type="button" onclick="triggerPicker()"
+              style="margin-top:.5rem;width:100%;padding:9px;background:var(--cream-alt);border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:var(--ff);color:var(--ink-soft);cursor:pointer">
+              📷 Change photo
+            </button>
+          </div>
+
+          <!-- Upload button (shown before photo chosen) -->
+          <div id="photo-upload-btn-wrap">
+            <button type="button" onclick="triggerPicker()"
+              style="width:100%;padding:1.5rem 1rem;background:var(--cream);border:2px dashed var(--border);border-radius:8px;font-size:15px;font-family:var(--ff);color:var(--ink-soft);cursor:pointer;text-align:center;line-height:1.8">
+              📷<br>
+              <strong style="color:var(--ink);font-size:14px">Tap here to upload photo</strong><br>
+              <span style="font-size:12px;font-family:var(--ffm)">JPG or PNG · auto-enhanced</span>
+            </button>
+          </div>
+
+          <div class="enhance-row" style="margin-top:.75rem">
+            <button class="toggle on" id="enhance-toggle" onclick="toggleEnhance()" type="button" aria-label="Toggle auto-enhance"></button>
+            <span class="enhance-label">Auto-enhance photo (brightness + sharpness)</span>
+          </div>
+        </div>
+
+        <!-- Name + category -->
+        <div class="form-row">
+          <div class="field">
+            <label>Product name *</label>
+            <input id="f-name" type="text" placeholder="e.g. Geometric Wire Clock"/>
+          </div>
+          <div class="field">
+            <label>Category *</label>
+            <select id="f-cat">
+              <option value="">Choose…</option>
+              <option value="decor">Wall Décor</option>
+              <option value="clocks">Clocks</option>
+              <option value="lighting">Lighting</option>
+              <option value="ceramics">Ceramics</option>
+              <option value="textiles">Textiles</option>
+              <option value="collectibles">Collectibles</option>
+              <option value="essentials">Home Essentials</option>
+              <option value="stationery">Stationery</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Price row -->
+        <div class="form-row">
+          <div class="field">
+            <label>Price (₦) *</label>
+            <input id="f-price" type="number" placeholder="e.g. 25000" min="0"/>
+          </div>
+          <div class="field">
+            <label>Original price (₦) — optional</label>
+            <input id="f-orig" type="number" placeholder="e.g. 35000 (crossed out)"/>
+          </div>
+          <div class="field">
+            <label>Badge</label>
+            <select id="f-badge">
+              <option value="new">New</option>
+              <option value="offer">Offer</option>
+              <option value="rare">Rare</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Origin / description -->
+        <div class="field">
+          <label>Origin / short description</label>
+          <input id="f-origin" type="text" placeholder="e.g. Matte steel · gold hands · Lagos"/>
+        </div>
+
+        <button class="btn-publish" id="add-btn" onclick="addProduct()">
+          <span id="add-btn-text">✦ Publish product to site</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MANAGE TAB ── -->
+  <div class="content" id="tab-manage" style="display:none">
+    <div class="search-bar">
+      <input id="search-input" type="search" placeholder="Search products…" oninput="renderTable()"/>
+    </div>
+    <div id="product-table-wrap"></div>
+  </div>
+
+  <!-- ── PUBLISH TAB ── -->
+  <div class="content" id="tab-publish" style="display:none">
+    <div class="export-card">
+      <h2>Publish your products to the live site</h2>
+      <p>When you add products here, they are saved on this device. To update your live website, download the updated <code>index.html</code> and upload it to GitHub — Vercel redeploys in 30 seconds.</p>
+      <button class="btn-export" onclick="exportSite()">⬇ Download updated index.html</button>
+      <div class="step">
+        <strong>How to publish (3 steps):</strong><br>
+        1. Tap <em>Download updated index.html</em> above<br>
+        2. Go to your GitHub repo → <code>index.html</code> → tap ✏️ pencil → then tap the upload icon<br>
+        3. Upload the downloaded file → <strong>Commit changes</strong><br><br>
+        Vercel detects the change and redeploys your live site in ~30 seconds. ✅
+      </div>
+    </div>
+    <div class="export-card">
+      <h2>Backup your products</h2>
+      <p>Download a JSON backup of all your product data. Keep this safe — you can restore it if you ever clear your browser.</p>
+      <button class="btn-export" style="background:var(--gold)" onclick="exportJSON()">⬇ Download products.json</button>
+    </div>
+    <div class="export-card">
+      <h2>Restore from backup</h2>
+      <p>Upload a <code>products.json</code> backup to restore all products.</p>
+      <input type="file" id="restore-input" accept=".json" onchange="restoreJSON(event)" style="font-size:13px;padding:.5rem 0"/>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal-sheet">
+    <h3>Edit product <button class="modal-close" onclick="closeEdit()">✕</button></h3>
+    <div class="form-grid">
+      <div class="field"><label>Product name</label><input id="e-name" type="text"/></div>
+      <div class="form-row">
+        <div class="field"><label>Category</label>
+          <select id="e-cat">
+            <option value="decor">Wall Décor</option><option value="clocks">Clocks</option>
+            <option value="lighting">Lighting</option><option value="ceramics">Ceramics</option>
+            <option value="textiles">Textiles</option><option value="collectibles">Collectibles</option>
+            <option value="essentials">Home Essentials</option><option value="stationery">Stationery</option>
+          </select>
+        </div>
+        <div class="field"><label>Badge</label>
+          <select id="e-badge"><option value="new">New</option><option value="offer">Offer</option><option value="rare">Rare</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Price (₦)</label><input id="e-price" type="number"/></div>
+        <div class="field"><label>Original price (₦)</label><input id="e-orig" type="number"/></div>
+      </div>
+      <div class="field"><label>Origin / description</label><input id="e-origin" type="text"/></div>
+      <button class="btn-publish" onclick="saveEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── CONFIG ── */
+const ADMIN_PASS = 'tcm2026';   // ← CHANGE THIS before uploading
+const WA_NUMBER  = '2348000000000'; // ← already updated by user
+const PAYSTACK_KEY = 'pk_test_xxxxxxxxxx'; // ← replace with real key
+const STORAGE_KEY = 'tcm_admin_products';
+
+/* ── AUTH ── */
+function doLogin(){
+  const pass = document.getElementById('login-pass').value;
+  if(pass === ADMIN_PASS){
+    sessionStorage.setItem('tcm_auth','1');
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    init();
+  } else {
+    document.getElementById('login-err').textContent='Incorrect password. Try again.';
+  }
+}
+function doLogout(){
+  sessionStorage.removeItem('tcm_auth');
+  location.reload();
+}
+document.getElementById('login-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+if(sessionStorage.getItem('tcm_auth')==='1'){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+
+/* ── DATA ── */
+let products = [];
+try{ products = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch{ products=[]; }
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(products)); }
+
+/* ── INIT ── */
+function init(){
+  updateStats();
+  renderTable();
+  updateManageTab();
+}
+init();
+
+/* ── TABS ── */
+function switchTab(id, el){
+  ['add','manage','publish'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===id?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(id==='manage') renderTable();
+}
+
+/* ── TOAST ── */
+function toast(msg, type='info'){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type==='error'?' error':'');
+  setTimeout(()=>el.className='toast',3000);
+}
+
+/* ── STATS ── */
+function updateStats(){
+  const total = products.length;
+  const cats = new Set(products.map(p=>p.cat)).size;
+  const value = products.reduce((a,p)=>a+(parseInt(p.price)||0),0);
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-cats').textContent = cats;
+  document.getElementById('stat-value').textContent = '₦'+value.toLocaleString('en-NG');
+}
+function updateManageTab(){
+  const btn = document.querySelector('[data-tab="manage"]');
+  if(btn) btn.textContent = `Manage (${products.length})`;
+}
+
+/* ── PHOTO ── */
+let currentPhotoB64 = '';
+let enhanceOn = true;
+
+function toggleEnhance(){
+  enhanceOn = !enhanceOn;
+  const t = document.getElementById('enhance-toggle');
+  t.classList.toggle('on', enhanceOn);
+}
+
+/* Directly trigger the hidden file input — works on all mobile browsers */
+function triggerPicker(){
+  const input = document.getElementById('photo-input');
+  input.removeAttribute('capture'); // remove capture so user can pick from gallery too
+  input.click();
+}
+
+function onDragOver(e){ e.preventDefault(); }
+function onDragLeave(){ }
+function onDrop(e){
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if(file) processPhoto(file);
+}
+function onPhotoSelect(e){
+  const file = e.target.files[0];
+  if(file) processPhoto(file);
+}
+
+function processPhoto(file){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const dataUrl = e.target.result;
+    if(enhanceOn){
+      enhanceImage(dataUrl, (enhanced)=>{
+        currentPhotoB64 = enhanced;
+        showPreview(enhanced);
+      });
+    } else {
+      currentPhotoB64 = dataUrl;
+      showPreview(dataUrl);
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function enhanceImage(dataUrl, cb){
+  const img = new Image();
+  img.onload = function(){
+    const canvas = document.createElement('canvas');
+    // Portrait crop 3:4
+    const targetW = 800, targetH = 1067;
+    canvas.width = targetW; canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+
+    // Draw scaled + centered
+    const scale = Math.max(targetW/img.width, targetH/img.height);
+    const sw = img.width*scale, sh = img.height*scale;
+    ctx.drawImage(img, (targetW-sw)/2, (targetH-sh)/2, sw, sh);
+
+    // Brightness + contrast via globalCompositeOperation
+    const imageData = ctx.getImageData(0,0,targetW,targetH);
+    const d = imageData.data;
+    for(let i=0;i<d.length;i+=4){
+      // Brightness +15%, Contrast +10%
+      const factor = 1.1;
+      const bright = 1.15;
+      d[i]   = Math.min(255, ((d[i]*bright   - 128)*factor + 128));
+      d[i+1] = Math.min(255, ((d[i+1]*bright - 128)*factor + 128));
+      d[i+2] = Math.min(255, ((d[i+2]*bright - 128)*factor + 128));
+    }
+    ctx.putImageData(imageData,0,0);
+
+    // Sharpen via convolution
+    const imageData2 = ctx.getImageData(0,0,targetW,targetH);
+    const d2 = imageData2.data;
+    const kernel = [0,-0.5,0,-0.5,3,-0.5,0,-0.5,0];
+    const src = new Uint8ClampedArray(d2);
+    for(let y=1;y<targetH-1;y++){
+      for(let x=1;x<targetW-1;x++){
+        const px = (y*targetW+x)*4;
+        for(let c=0;c<3;c++){
+          let s=0;
+          for(let ky=-1;ky<=1;ky++){
+            for(let kx=-1;kx<=1;kx++){
+              s += src[((y+ky)*targetW+(x+kx))*4+c] * kernel[(ky+1)*3+(kx+1)];
+            }
+          }
+          d2[px+c] = Math.min(255,Math.max(0,s));
+        }
+      }
+    }
+    ctx.putImageData(imageData2,0,0);
+
+    cb(canvas.toDataURL('image/jpeg',0.82));
+  };
+  img.src = dataUrl;
+}
+
+function showPreview(src){
+  // Show preview image, hide upload button
+  const preview = document.getElementById('photo-preview');
+  preview.src = src;
+  document.getElementById('photo-preview-wrap').style.display = 'block';
+  document.getElementById('photo-upload-btn-wrap').style.display = 'none';
+  toast('Photo ready ✓','info');
+}
+
+/* ── ADD PRODUCT ── */
+function addProduct(){
+  const name   = document.getElementById('f-name').value.trim();
+  const cat    = document.getElementById('f-cat').value;
+  const price  = document.getElementById('f-price').value.trim();
+  const orig   = document.getElementById('f-orig').value.trim();
+  const badge  = document.getElementById('f-badge').value;
+  const origin = document.getElementById('f-origin').value.trim();
+
+  if(!name){ toast('Enter a product name','error'); return; }
+  if(!cat){ toast('Choose a category','error'); return; }
+  if(!price){ toast('Enter a price','error'); return; }
+
+  const product = {
+    id: 'p'+Date.now(),
+    name, cat, price, orig, badge, origin,
+    img: currentPhotoB64,
+    added: new Date().toISOString(),
+  };
+
+  products.unshift(product);
+  save();
+  updateStats();
+  updateManageTab();
+
+  // Reset form
+  document.getElementById('f-name').value='';
+  document.getElementById('f-price').value='';
+  document.getElementById('f-orig').value='';
+  document.getElementById('f-origin').value='';
+  document.getElementById('f-cat').value='';
+  document.getElementById('f-badge').value='new';
+  document.getElementById('photo-preview-wrap').style.display='none';
+  document.getElementById('photo-upload-btn-wrap').style.display='block';
+  document.getElementById('photo-input').value='';
+  currentPhotoB64='';
+
+  toast(`"${name}" added! Go to Publish tab to update your site.`,'info');
+}
+
+/* ── MANAGE TABLE ── */
+function renderTable(){
+  const q = (document.getElementById('search-input')?.value||'').toLowerCase();
+  const filtered = products.filter(p=>
+    p.name.toLowerCase().includes(q) ||
+    p.cat.toLowerCase().includes(q) ||
+    (p.origin||'').toLowerCase().includes(q)
+  );
+
+  const wrap = document.getElementById('product-table-wrap');
+  if(!filtered.length){
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div>${products.length?'No products match your search.':'No products yet. Go to <strong>Add product</strong> to get started.'}</div>`;
+    return;
+  }
+
+  const catLabel = {decor:'Wall Décor',clocks:'Clocks',lighting:'Lighting',ceramics:'Ceramics',textiles:'Textiles',collectibles:'Collectibles',essentials:'Home Essentials',stationery:'Stationery'};
+
+  wrap.innerHTML = `<table class="product-table">
+    <thead><tr>
+      <th>Photo</th><th>Name</th><th>Category</th><th>Price</th><th>Badge</th><th>Actions</th>
+    </tr></thead>
+    <tbody>
+    ${filtered.map(p=>`
+      <tr>
+        <td>${p.img?`<img class="thumb" src="${p.img}" alt="${p.name}"/>`:`<div class="thumb-placeholder">📦</div>`}</td>
+        <td><strong>${p.name}</strong>${p.origin?`<br><span style="font-size:11px;color:var(--ink-soft)">${p.origin}</span>`:''}</td>
+        <td><span class="cat-chip">${catLabel[p.cat]||p.cat}</span></td>
+        <td><span class="price">₦${parseInt(p.price).toLocaleString('en-NG')}</span>${p.orig?`<br><span style="font-size:11px;color:var(--ink-soft);text-decoration:line-through">₦${parseInt(p.orig).toLocaleString('en-NG')}</span>`:''}</td>
+        <td><span class="badge badge-${p.badge}">${p.badge}</span></td>
+        <td><div class="action-btns">
+          <button class="btn-edit" onclick="openEdit('${p.id}')">Edit</button>
+          <button class="btn-del" onclick="deleteProduct('${p.id}')">Delete</button>
+        </div></td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+/* ── DELETE ── */
+function deleteProduct(id){
+  const p = products.find(p=>p.id===id);
+  if(!p) return;
+  if(!confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
+  products = products.filter(p=>p.id!==id);
+  save(); updateStats(); updateManageTab(); renderTable();
+  toast(`"${p.name}" deleted`,'info');
+}
+
+/* ── EDIT ── */
+let editId = null;
+function openEdit(id){
+  const p = products.find(p=>p.id===id);
+  if(!p) return;
+  editId = id;
+  document.getElementById('e-name').value = p.name;
+  document.getElementById('e-cat').value = p.cat;
+  document.getElementById('e-badge').value = p.badge;
+  document.getElementById('e-price').value = p.price;
+  document.getElementById('e-orig').value = p.orig||'';
+  document.getElementById('e-origin').value = p.origin||'';
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEdit(){ document.getElementById('edit-modal').classList.remove('open'); editId=null; }
+function saveEdit(){
+  const p = products.find(p=>p.id===editId);
+  if(!p) return;
+  p.name   = document.getElementById('e-name').value.trim();
+  p.cat    = document.getElementById('e-cat').value;
+  p.badge  = document.getElementById('e-badge').value;
+  p.price  = document.getElementById('e-price').value;
+  p.orig   = document.getElementById('e-orig').value;
+  p.origin = document.getElementById('e-origin').value.trim();
+  save(); updateStats(); updateManageTab(); renderTable();
+  closeEdit();
+  toast(`"${p.name}" updated ✓`,'info');
+}
+document.getElementById('edit-modal').addEventListener('click', e=>{ if(e.target===document.getElementById('edit-modal')) closeEdit(); });
+
+/* ── EXPORT SITE ── */
+function exportSite(){
+  // Fetch the base index.html and inject admin products before </ul>
+  fetch('index.html')
+    .then(r=>r.text())
+    .then(html=>{
+      const newCards = products.map(p=>buildCard(p)).join('\n');
+      // Inject after existing list items, before </ul>
+      const updated = html.replace(
+        /(<\/ul>\s*\n\s*<!-- Offer strip)/,
+        newCards + '\n  $1'
+      );
+      // Update count
+      const totalCount = (updated.match(/<li class="product-card"/g)||[]).length;
+      const final = updated
+        .replace(/\d+\+ Live listings/, totalCount+'+ Live listings')
+        .replace(/>\d+ items →/, `>${totalCount} items →`);
+      download('index.html', final, 'text/html');
+      toast('index.html downloaded! Upload to GitHub to go live.','info');
+    })
+    .catch(()=>{
+      toast('Open admin.html from your project folder (not directly from downloads)','error');
+    });
+}
+
+function buildCard(p){
+  const fmt = n => n ? '₦'+parseInt(n).toLocaleString('en-NG') : '';
+  const origHtml = p.orig ? `<span class="card-price-orig">${fmt(p.orig)}</span>` : '';
+  const wa = `Hi! I'm interested in the *${p.name}* (${fmt(p.price)}) on thecontainermarket.ng. Is it still available?`;
+  const imgTag = p.img
+    ? `<img src="${p.img}" alt="${p.name}" loading="lazy"/>`
+    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--cream-alt)">📦</div>`;
+  return `    <li class="product-card" data-category="${p.cat}">
+      <div class="card-img">
+        ${imgTag}
+        <span class="card-badge card-badge--${p.badge}">${p.badge.charAt(0).toUpperCase()+p.badge.slice(1)}</span>
+        <button class="card-wishlist" aria-label="Save ${p.name} to wishlist">🤍</button>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-origin">${p.origin||''}</div>
+        <div class="card-price-row"><span class="card-price">${fmt(p.price)}</span>${origHtml}</div>
+        <div class="card-actions">
+          <button class="btn-enquire" data-wa="${wa}" aria-label="Enquire on WhatsApp">WA Enquire</button>
+          <button class="btn-buy" data-product="${p.name}" data-price="${p.price}" aria-label="Buy now">Buy Now</button>
+        </div>
+      </div>
+    </li>`;
+}
+
+/* ── JSON BACKUP ── */
+function exportJSON(){
+  download('tcm-products-backup.json', JSON.stringify(products, null, 2), 'application/json');
+  toast('products.json downloaded','info');
+}
+function restoreJSON(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      const data = JSON.parse(ev.target.result);
+      if(!Array.isArray(data)) throw new Error();
+      products = data;
+      save(); updateStats(); updateManageTab(); renderTable();
+      toast(`Restored ${data.length} products ✓`,'info');
+    }catch{
+      toast('Invalid backup file','error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ── DOWNLOAD HELPER ── */
+function download(filename, content, type){
+  const blob = new Blob([content],{type});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
 </body>
 </html>
