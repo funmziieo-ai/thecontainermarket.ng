@@ -3,211 +3,801 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <meta name="description" content="thecontainermarket.ng — Curated vintage, bargain interior finds & stationery. Buy online or enquire on WhatsApp."/>
-  <title>The Container Market · Interiors & Stationery</title>
+  <meta name="description" content="The Container Market — Curated vintage & bargain interior finds. Shop online or enquire on WhatsApp."/>
+  <title>The Container Market · Vintage & Bargain Interiors</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Lora:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <script src="https://js.paystack.co/v1/inline.js"></script>
   <style>
+    /* ── TOKENS ── */
     :root{
-      --ink:#2B1E12;--ink-soft:#5C4433;--cream:#F5EFE0;--cream-alt:#EDE3CE;
-      --parchment:#D9CCAE;--green:#2A4033;--green-mid:#3B5E48;--green-lt:#EAF0E8;
-      --terra:#B03A1A;--terra-lt:#F7E6DF;--gold:#9E7B38;--gold-lt:#F4EBD6;
-      --border:#C8B99A;--border-dk:#A0896A;--radius:6px;--radius-lg:12px;
-      --ff-head:'Playfair Display',Georgia,serif;--ff-body:'Lora',Georgia,serif;
-      --ff-mono:'DM Mono',monospace;--shadow-md:0 4px 18px rgba(43,30,18,.14);
+      --ink:#2B1E12;--ink-soft:#5C4433;
+      --cream:#F5EFE0;--cream-alt:#EDE3CE;--cream-dark:#D9CCAE;
+      --green:#2A4033;--green-mid:#3B5E48;--green-lt:#EAF0E8;
+      --terra:#B03A1A;--terra-lt:#F7E6DF;
+      --gold:#9E7B38;--gold-lt:#F4EBD6;
+      --border:#C8B99A;--border-dk:#A0896A;
+      --radius:6px;--radius-lg:12px;
+      --ff-head:'Playfair Display',Georgia,serif;
+      --ff-body:'Lora',Georgia,serif;
+      --ff-mono:'DM Mono',monospace;
+      --shadow-sm:0 1px 4px rgba(43,30,18,.10);
+      --shadow-md:0 4px 18px rgba(43,30,18,.16);
+      --cart-width:340px;
     }
+
+    /* ── RESET ── */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{font-family:var(--ff-body);background:var(--cream);color:var(--ink);font-size:16px;line-height:1.6;overflow-x:hidden}
+    body{font-family:var(--ff-body);background:var(--cream);color:var(--ink);
+      font-size:16px;line-height:1.6;overflow-x:hidden}
     img{max-width:100%;display:block}
     a{color:inherit;text-decoration:none}
     button{cursor:pointer;font-family:inherit}
-    .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+    .visually-hidden{position:absolute;width:1px;height:1px;padding:0;
+      margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 
-    /* ── HERO ── */
-    #hero{background:var(--green);color:var(--cream);overflow:hidden;position:relative}
-    .hero-topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid rgba(245,239,224,.14);position:relative;z-index:2}
-    .logo{font-family:var(--ff-head);font-size:15px;font-style:italic;color:var(--cream);line-height:1.2}
-    .logo span{display:block;font-style:normal;font-size:9px;font-family:var(--ff-mono);letter-spacing:1.8px;text-transform:uppercase;color:var(--parchment);margin-top:2px}
-    .topbar-actions{display:flex;gap:.6rem}
-    .topbar-actions button{background:rgba(245,239,224,.1);border:1px solid rgba(245,239,224,.2);color:var(--cream);border-radius:var(--radius);padding:7px 12px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.4px;transition:background .2s}
-    .topbar-actions button:hover{background:rgba(245,239,224,.18)}
-    .hero-body{position:relative;z-index:2;padding:2.5rem 1.25rem 1.5rem}
-    .hero-eyebrow{font-family:var(--ff-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--parchment);margin-bottom:.75rem}
-    .hero-headline{font-family:var(--ff-head);font-size:clamp(26px,8vw,38px);font-weight:700;line-height:1.15;color:var(--cream);margin-bottom:1rem}
-    .hero-headline em{font-style:italic;color:var(--parchment)}
-    .hero-sub{font-size:14px;color:var(--parchment);max-width:340px;line-height:1.65;margin-bottom:1.75rem}
-    .hero-search{display:flex;border:1.5px solid rgba(245,239,224,.25);border-radius:var(--radius-lg);overflow:hidden;background:rgba(245,239,224,.08);margin-bottom:1.5rem}
-    #input-search{flex:1;background:transparent;border:none;outline:none;padding:13px 14px;font-family:var(--ff-body);font-size:14px;color:var(--cream)}
+    /* ══════════════════════════════════════════
+       TOP BAR
+    ══════════════════════════════════════════ */
+    #hero{background:var(--green);color:var(--cream);position:relative}
+
+    .hero-topbar{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:.9rem 1.25rem;border-bottom:1px solid rgba(245,239,224,.14);
+      position:relative;z-index:10;
+    }
+    .logo{font-family:var(--ff-head);font-size:16px;font-style:italic;
+      color:var(--cream);line-height:1.2}
+    .logo span{display:block;font-style:normal;font-size:9px;
+      font-family:var(--ff-mono);letter-spacing:1.8px;text-transform:uppercase;
+      color:var(--cream-dark);margin-top:2px}
+
+    .topbar-right{display:flex;align-items:center;gap:.5rem}
+
+    /* Cart icon with badge */
+    #cart-btn{
+      background:rgba(245,239,224,.1);border:1px solid rgba(245,239,224,.2);
+      color:var(--cream);border-radius:var(--radius);padding:7px 12px;
+      font-family:var(--ff-mono);font-size:11px;position:relative;
+      display:flex;align-items:center;gap:6px;transition:background .2s;
+    }
+    #cart-btn:hover{background:rgba(245,239,224,.18)}
+    #cart-count{
+      background:var(--terra);color:#fff;border-radius:50%;
+      width:18px;height:18px;font-size:10px;display:none;
+      align-items:center;justify-content:center;font-weight:500;
+    }
+    #cart-count.show{display:flex}
+
+    /* Wishlist btn */
+    #btn-wishlist{
+      background:rgba(245,239,224,.1);border:1px solid rgba(245,239,224,.2);
+      color:var(--cream);border-radius:var(--radius);padding:7px 10px;
+      font-size:15px;transition:background .2s;
+    }
+    #btn-wishlist:hover{background:rgba(245,239,224,.18)}
+
+    /* Hamburger */
+    #btn-menu{
+      background:rgba(245,239,224,.1);border:1px solid rgba(245,239,224,.2);
+      color:var(--cream);border-radius:var(--radius);padding:7px 10px;
+      font-size:18px;line-height:1;transition:background .2s;
+    }
+    #btn-menu:hover{background:rgba(245,239,224,.18)}
+
+    /* ══════════════════════════════════════════
+       SIDE MENU (hamburger drawer)
+    ══════════════════════════════════════════ */
+    #side-menu{
+      position:fixed;top:0;right:-320px;width:300px;height:100vh;
+      background:var(--green);z-index:2000;transition:right .3s ease;
+      overflow-y:auto;display:flex;flex-direction:column;
+    }
+    #side-menu.open{right:0}
+    .menu-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1999;
+      display:none;
+    }
+    .menu-overlay.show{display:block}
+
+    .menu-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.25rem 1.25rem 1rem;
+      border-bottom:1px solid rgba(245,239,224,.12);
+    }
+    .menu-logo{font-family:var(--ff-head);font-size:15px;font-style:italic;
+      color:var(--cream)}
+    #menu-close{background:none;border:none;color:var(--cream);
+      font-size:22px;padding:4px;line-height:1}
+
+    .menu-section{padding:.75rem 0}
+    .menu-section-label{
+      font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;
+      text-transform:uppercase;color:rgba(245,239,224,.45);
+      padding:.25rem 1.25rem .5rem;
+    }
+    .menu-item{
+      display:flex;align-items:center;gap:.75rem;
+      padding:.75rem 1.25rem;color:var(--cream);font-size:14px;
+      border:none;background:none;width:100%;text-align:left;
+      transition:background .15s;cursor:pointer;font-family:var(--ff-body);
+    }
+    .menu-item:hover{background:rgba(245,239,224,.08)}
+    .menu-item .mi-icon{font-size:18px;width:24px;text-align:center;flex-shrink:0}
+    .menu-item .mi-label{flex:1}
+    .menu-item .mi-badge{
+      background:var(--terra);color:#fff;border-radius:20px;
+      padding:1px 8px;font-size:10px;font-family:var(--ff-mono);
+    }
+    .menu-divider{border:none;border-top:1px solid rgba(245,239,224,.1);margin:.25rem 0}
+
+    .menu-wa-btn{
+      margin:1rem 1.25rem;background:#25D366;color:#fff;border:none;
+      border-radius:var(--radius);padding:11px;font-family:var(--ff-mono);
+      font-size:12px;letter-spacing:.5px;text-transform:uppercase;
+      width:calc(100% - 2.5rem);display:flex;align-items:center;
+      justify-content:center;gap:8px;cursor:pointer;transition:opacity .2s;
+    }
+    .menu-wa-btn:hover{opacity:.88}
+
+    /* ══════════════════════════════════════════
+       CART DRAWER
+    ══════════════════════════════════════════ */
+    #cart-drawer{
+      position:fixed;top:0;right:-360px;width:var(--cart-width);
+      max-width:100vw;height:100vh;background:#fff;z-index:2000;
+      transition:right .3s ease;display:flex;flex-direction:column;
+      box-shadow:-4px 0 24px rgba(43,30,18,.12);
+    }
+    #cart-drawer.open{right:0}
+
+    .cart-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);
+      background:var(--green);color:var(--cream);
+    }
+    .cart-header h3{font-family:var(--ff-head);font-size:16px;font-weight:500}
+    #cart-close{background:none;border:none;color:var(--cream);
+      font-size:22px;cursor:pointer;padding:4px;line-height:1}
+
+    .cart-items{flex:1;overflow-y:auto;padding:.75rem}
+    .cart-empty{
+      text-align:center;padding:3rem 1rem;color:var(--ink-soft);
+      font-size:14px;
+    }
+    .cart-empty-icon{font-size:40px;margin-bottom:.75rem}
+
+    .cart-item{
+      display:flex;gap:.75rem;padding:.85rem 0;
+      border-bottom:1px solid var(--border);align-items:flex-start;
+    }
+    .cart-item-img{
+      width:60px;height:80px;object-fit:cover;border-radius:4px;
+      border:1px solid var(--border);flex-shrink:0;
+    }
+    .cart-item-info{flex:1;min-width:0}
+    .cart-item-name{font-size:13px;font-weight:500;color:var(--ink);
+      line-height:1.3;margin-bottom:3px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cart-item-price{font-family:var(--ff-mono);font-size:13px;
+      color:var(--green);margin-bottom:6px}
+    .cart-item-qty{
+      display:flex;align-items:center;gap:.4rem;
+    }
+    .qty-btn{
+      width:26px;height:26px;border:1px solid var(--border);
+      background:var(--cream-alt);border-radius:4px;font-size:14px;
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;flex-shrink:0;transition:background .15s;
+    }
+    .qty-btn:hover{background:var(--border)}
+    .qty-num{font-family:var(--ff-mono);font-size:13px;min-width:20px;
+      text-align:center}
+    .cart-item-remove{
+      background:none;border:none;color:var(--border-dk);
+      font-size:16px;cursor:pointer;padding:2px;flex-shrink:0;
+      line-height:1;transition:color .15s;
+    }
+    .cart-item-remove:hover{color:var(--terra)}
+
+    .cart-footer{
+      border-top:1px solid var(--border);padding:1rem 1.25rem;
+      background:#fff;
+    }
+    .cart-subtotal{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:.5rem;font-size:13px;color:var(--ink-soft);
+    }
+    .cart-total{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:1rem;font-size:16px;font-weight:500;color:var(--ink);
+    }
+    .cart-total span:last-child{font-family:var(--ff-mono);color:var(--green)}
+    .btn-checkout{
+      width:100%;background:var(--terra);color:#fff;border:none;
+      border-radius:var(--radius);padding:13px;font-family:var(--ff-mono);
+      font-size:13px;letter-spacing:.5px;text-transform:uppercase;
+      transition:background .2s;margin-bottom:.6rem;
+    }
+    .btn-checkout:hover{background:#922F12}
+    .btn-wa-checkout{
+      width:100%;background:#25D366;color:#fff;border:none;
+      border-radius:var(--radius);padding:11px;font-family:var(--ff-mono);
+      font-size:12px;letter-spacing:.4px;text-transform:uppercase;
+      transition:opacity .2s;display:flex;align-items:center;
+      justify-content:center;gap:6px;
+    }
+    .btn-wa-checkout:hover{opacity:.88}
+
+    /* ══════════════════════════════════════════
+       HERO BODY
+    ══════════════════════════════════════════ */
+    .hero-body{padding:2rem 1.25rem 1.25rem;position:relative;z-index:2}
+    .hero-eyebrow{font-family:var(--ff-mono);font-size:10px;letter-spacing:2px;
+      text-transform:uppercase;color:var(--cream-dark);margin-bottom:.65rem}
+    .hero-headline{font-family:var(--ff-head);
+      font-size:clamp(24px,7vw,36px);font-weight:700;line-height:1.18;
+      color:var(--cream);margin-bottom:.85rem}
+    .hero-headline em{font-style:italic;color:var(--cream-dark)}
+    .hero-sub{font-size:13px;color:var(--cream-dark);max-width:320px;
+      line-height:1.65;margin-bottom:1.5rem}
+
+    .hero-search{display:flex;border:1.5px solid rgba(245,239,224,.25);
+      border-radius:var(--radius-lg);overflow:hidden;
+      background:rgba(245,239,224,.08);margin-bottom:1.25rem}
+    #input-search{flex:1;background:transparent;border:none;outline:none;
+      padding:12px 14px;font-family:var(--ff-body);font-size:14px;
+      color:var(--cream)}
     #input-search::placeholder{color:rgba(245,239,224,.45)}
-    .hero-search button{background:var(--terra);border:none;color:#fff;padding:13px 18px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.6px;text-transform:uppercase;transition:background .2s}
+    .hero-search button{background:var(--terra);border:none;color:#fff;
+      padding:12px 16px;font-family:var(--ff-mono);font-size:11px;
+      letter-spacing:.6px;text-transform:uppercase;transition:background .2s;
+      white-space:nowrap}
     .hero-search button:hover{background:#922F12}
-    .hero-stats{display:flex;gap:.75rem;flex-wrap:wrap}
-    .stat-pill{background:rgba(245,239,224,.08);border:1px solid rgba(245,239,224,.16);border-radius:20px;padding:5px 13px;font-family:var(--ff-mono);font-size:11px;color:var(--parchment)}
-    .stat-pill strong{color:var(--cream);font-size:13px}
-    .hero-filters{padding:.75rem 1.25rem;display:flex;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-top:1px solid rgba(245,239,224,.1);position:relative;z-index:2}
+
+    .hero-stats{display:flex;gap:.6rem;flex-wrap:wrap}
+    .stat-pill{background:rgba(245,239,224,.08);border:1px solid rgba(245,239,224,.16);
+      border-radius:20px;padding:4px 12px;font-family:var(--ff-mono);
+      font-size:10px;color:var(--cream-dark)}
+    .stat-pill strong{color:var(--cream);font-size:12px}
+
+    /* Category filter chips */
+    .hero-filters{
+      padding:.65rem 1.25rem;display:flex;gap:.5rem;overflow-x:auto;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none;
+      border-top:1px solid rgba(245,239,224,.1);position:relative;z-index:2;
+    }
     .hero-filters::-webkit-scrollbar{display:none}
-    .filter-chip{flex-shrink:0;background:rgba(245,239,224,.08);border:1px solid rgba(245,239,224,.2);color:var(--parchment);border-radius:20px;padding:5px 14px;font-family:var(--ff-mono);font-size:11px;transition:all .2s;white-space:nowrap}
-    .filter-chip:hover,.filter-chip.active,.filter-chip[aria-pressed="true"]{background:var(--terra);border-color:var(--terra);color:#fff}
+    .filter-chip{
+      flex-shrink:0;background:rgba(245,239,224,.08);
+      border:1px solid rgba(245,239,224,.2);color:var(--cream-dark);
+      border-radius:20px;padding:5px 13px;font-family:var(--ff-mono);
+      font-size:10px;transition:all .2s;white-space:nowrap;letter-spacing:.3px;
+    }
+    .filter-chip:hover,.filter-chip.active{
+      background:var(--terra);border-color:var(--terra);color:#fff}
 
-    /* ── MAIN ── */
-    #main{padding:1.75rem 1.25rem 2rem}
-    #insights-panel{background:var(--green);color:var(--cream);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1.75rem;display:flex;align-items:flex-start;gap:.85rem;position:relative;overflow:hidden}
-    .insights-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+    /* ══════════════════════════════════════════
+       MAIN / PRODUCT GRID
+    ══════════════════════════════════════════ */
+    #main{padding:1.5rem 1.25rem 2rem}
+
+    /* Insights */
+    #insights-panel{
+      background:var(--green);color:var(--cream);border-radius:var(--radius-lg);
+      padding:1rem 1.25rem;margin-bottom:1.5rem;
+      display:flex;align-items:flex-start;gap:.75rem;position:relative;
+      overflow:hidden;
+    }
+    .insights-icon{font-size:20px;flex-shrink:0;margin-top:2px}
     .insights-text{flex:1}
-    .insights-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--parchment);margin-bottom:3px}
-    .insights-msg{font-size:13px;line-height:1.55;color:var(--cream)}
-    .insights-msg strong{color:var(--parchment)}
-    #insights-refresh{background:rgba(245,239,224,.12);border:1px solid rgba(245,239,224,.2);color:var(--parchment);border-radius:var(--radius);padding:5px 10px;font-family:var(--ff-mono);font-size:10px;flex-shrink:0;align-self:center;transition:background .2s;cursor:pointer}
+    .insights-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;
+      text-transform:uppercase;color:var(--cream-dark);margin-bottom:3px}
+    .insights-msg{font-size:13px;line-height:1.5;color:var(--cream)}
+    .insights-msg strong{color:var(--cream-dark)}
+    #insights-refresh{
+      background:rgba(245,239,224,.12);border:1px solid rgba(245,239,224,.2);
+      color:var(--cream-dark);border-radius:var(--radius);padding:4px 9px;
+      font-family:var(--ff-mono);font-size:10px;flex-shrink:0;
+      align-self:center;cursor:pointer;transition:background .2s;
+    }
     #insights-refresh:hover{background:rgba(245,239,224,.2)}
-    .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem}
-    .section-head h2{font-family:var(--ff-head);font-size:20px;font-weight:500;color:var(--ink)}
-    .section-head h2 em{font-style:italic;color:var(--ink-soft)}
-    .section-head a{font-family:var(--ff-mono);font-size:11px;color:var(--terra);text-decoration:underline;text-underline-offset:3px}
 
-    /* ── PRODUCT GRID ── */
-    #list-root{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;list-style:none}
-    @media(min-width:600px){#list-root{grid-template-columns:repeat(3,1fr)}}
-    .product-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .22s,transform .22s;position:relative}
+    .section-head{
+      display:flex;align-items:baseline;justify-content:space-between;
+      margin-bottom:1rem;
+    }
+    .section-head h2{font-family:var(--ff-head);font-size:19px;
+      font-weight:500;color:var(--ink)}
+    .section-head h2 em{font-style:italic;color:var(--ink-soft)}
+    .section-head a{font-family:var(--ff-mono);font-size:11px;
+      color:var(--terra);text-decoration:underline;text-underline-offset:3px}
+
+    /* Product grid */
+    #list-root{display:grid;grid-template-columns:1fr 1fr;
+      gap:.85rem;list-style:none}
+    @media(min-width:540px){#list-root{grid-template-columns:repeat(3,1fr)}}
+    @media(min-width:900px){#list-root{grid-template-columns:repeat(4,1fr)}}
+
+    /* Product card */
+    .product-card{
+      background:#fff;border:1px solid var(--border);
+      border-radius:var(--radius-lg);overflow:hidden;
+      display:flex;flex-direction:column;
+      transition:box-shadow .22s,transform .22s;position:relative;
+    }
     .product-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
-    .card-img{aspect-ratio:3/4;background:var(--cream-alt);position:relative;overflow:hidden;cursor:pointer}
-    .card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .35s ease}
+
+    .card-img{
+      aspect-ratio:3/4;background:var(--cream-alt);
+      position:relative;overflow:hidden;cursor:pointer;
+    }
+    .card-img img{
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;object-position:center;
+      transition:transform .35s ease;pointer-events:none;
+    }
     .product-card:hover .card-img img{transform:scale(1.04)}
-    .card-badge{position:absolute;top:8px;left:8px;font-family:var(--ff-mono);font-size:9px;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:20px;font-weight:500}
+
+    .card-badge{
+      position:absolute;top:8px;left:8px;font-family:var(--ff-mono);
+      font-size:9px;letter-spacing:.5px;text-transform:uppercase;
+      padding:3px 8px;border-radius:20px;font-weight:500;pointer-events:none;
+    }
     .card-badge--offer{background:var(--terra);color:#fff}
     .card-badge--new{background:var(--green);color:var(--cream)}
     .card-badge--rare{background:var(--gold);color:#fff}
-    .card-wishlist{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.82);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:15px;transition:background .2s}
+
+    .card-wishlist{
+      position:absolute;top:8px;right:8px;
+      background:rgba(255,255,255,.85);border:none;border-radius:50%;
+      width:30px;height:30px;display:flex;align-items:center;
+      justify-content:center;font-size:14px;transition:background .2s;
+      z-index:2;
+    }
     .card-wishlist:hover{background:#fff}
-    .card-body{padding:.7rem .85rem .85rem;flex:1;display:flex;flex-direction:column}
-    .card-name{font-family:var(--ff-head);font-size:13px;font-weight:500;line-height:1.3;color:var(--ink);margin-bottom:3px}
-    .card-origin{font-family:var(--ff-mono);font-size:10px;color:var(--ink-soft);letter-spacing:.3px;margin-bottom:6px}
-    .card-price-row{display:flex;align-items:baseline;gap:5px;margin-bottom:8px}
-    .card-price{font-family:var(--ff-mono);font-size:14px;font-weight:500;color:var(--green)}
-    .card-price-orig{font-family:var(--ff-mono);font-size:11px;color:var(--border-dk);text-decoration:line-through}
-    .card-actions{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:auto}
-    .btn-enquire{background:var(--green);color:var(--cream);border:none;border-radius:var(--radius);padding:8px 6px;font-family:var(--ff-mono);font-size:10px;letter-spacing:.3px;transition:background .2s}
+    .card-wishlist.saved{background:#fff}
+
+    .card-body{
+      padding:.65rem .8rem .8rem;flex:1;display:flex;flex-direction:column}
+    .card-name{
+      font-family:var(--ff-head);font-size:13px;font-weight:500;
+      line-height:1.3;color:var(--ink);margin-bottom:2px;
+    }
+    .card-origin{font-family:var(--ff-mono);font-size:9px;color:var(--ink-soft);
+      letter-spacing:.3px;margin-bottom:5px;opacity:.8}
+    .card-price-row{display:flex;align-items:baseline;gap:5px;margin-bottom:7px}
+    .card-price{font-family:var(--ff-mono);font-size:13px;font-weight:500;
+      color:var(--green)}
+    .card-price-orig{font-family:var(--ff-mono);font-size:10px;
+      color:var(--border-dk);text-decoration:line-through}
+
+    /* Three action buttons */
+    .card-actions{
+      display:grid;grid-template-columns:1fr 1fr;gap:.35rem;
+      margin-top:auto;
+    }
+    .btn-enquire{
+      background:var(--green);color:var(--cream);border:none;
+      border-radius:var(--radius);padding:7px 4px;font-family:var(--ff-mono);
+      font-size:9px;letter-spacing:.3px;text-align:center;
+      transition:background .2s;
+    }
     .btn-enquire:hover{background:var(--green-mid)}
-    .btn-buy{background:var(--terra);color:#fff;border:none;border-radius:var(--radius);padding:8px 6px;font-family:var(--ff-mono);font-size:10px;letter-spacing:.3px;transition:background .2s}
+    .btn-buy{
+      background:var(--terra);color:#fff;border:none;
+      border-radius:var(--radius);padding:7px 4px;font-family:var(--ff-mono);
+      font-size:9px;letter-spacing:.3px;text-align:center;
+      transition:background .2s;
+    }
     .btn-buy:hover{background:#922F12}
+    .btn-cart{
+      grid-column:1/-1;
+      background:var(--cream-alt);color:var(--ink);
+      border:1px solid var(--border);border-radius:var(--radius);
+      padding:7px 4px;font-family:var(--ff-mono);font-size:9px;
+      letter-spacing:.3px;text-align:center;transition:all .2s;
+      display:flex;align-items:center;justify-content:center;gap:5px;
+    }
+    .btn-cart:hover{background:var(--green);color:var(--cream);border-color:var(--green)}
+    .btn-cart.in-cart{background:var(--green-lt);color:var(--green);
+      border-color:#8AB49A}
 
-    /* ── OFFER STRIP ── */
-    #offer-strip{background:var(--terra-lt);border:1px solid #D9836A;border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin:1.5rem 0;display:none}
-    #offer-strip.open{display:block}
-    #offer-strip h3{font-family:var(--ff-head);font-size:16px;color:var(--terra);margin-bottom:.75rem}
-    .offer-form{display:grid;gap:.6rem}
-    .offer-form label{font-family:var(--ff-mono);font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px;display:block}
-    .offer-form input{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-family:var(--ff-body);font-size:14px;background:#fff;color:var(--ink);outline:none;transition:border-color .2s}
-    .offer-form input:focus{border-color:var(--terra)}
-    #btn-primary{background:var(--terra);color:#fff;border:none;border-radius:var(--radius);padding:12px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.6px;text-transform:uppercase;width:100%;margin-top:.25rem;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px}
-    #btn-primary:hover{background:#92300F}
+    /* ══════════════════════════════════════════
+       SELLER UPLOAD SECTION
+    ══════════════════════════════════════════ */
+    #seller-section{
+      margin-top:2rem;background:var(--cream-alt);
+      border:1.5px dashed var(--border-dk);border-radius:var(--radius-lg);
+      overflow:hidden;
+    }
+    .seller-header{
+      background:var(--green);color:var(--cream);
+      padding:1.1rem 1.25rem;cursor:pointer;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .seller-header h3{font-family:var(--ff-head);font-size:16px;
+      font-style:italic;font-weight:500}
+    .seller-header p{font-size:12px;opacity:.75;margin-top:2px;
+      font-family:var(--ff-mono)}
+    .seller-toggle{font-size:20px;flex-shrink:0;transition:transform .25s}
+    .seller-toggle.open{transform:rotate(180deg)}
 
-    /* ── VENDOR CTA ── */
-    #vendor-cta{margin-top:1.75rem;background:var(--cream-alt);border:1.5px dashed var(--border-dk);border-radius:var(--radius-lg);padding:1.25rem;text-align:center}
-    #vendor-cta h3{font-family:var(--ff-head);font-size:17px;font-style:italic;color:var(--ink);margin-bottom:.4rem}
-    #vendor-cta p{font-size:13px;color:var(--ink-soft);margin-bottom:1rem;line-height:1.55}
-    .vendor-actions{display:flex;gap:.65rem;justify-content:center;flex-wrap:wrap}
-    .btn-vendor{background:var(--green);color:var(--cream);border:none;border-radius:var(--radius);padding:10px 18px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;transition:background .2s}
-    .btn-vendor:hover{background:var(--green-mid)}
-    .btn-vendor-wa{background:#25D366;color:#fff;border:none;border-radius:var(--radius);padding:10px 18px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;transition:opacity .2s}
-    .btn-vendor-wa:hover{opacity:.88}
+    .seller-form{display:none;padding:1.25rem}
+    .seller-form.open{display:block}
 
-    /* ── FOOTER ── */
-    #footer{background:var(--ink);color:var(--parchment);padding:2rem 1.25rem 1.5rem}
-    .footer-logo{font-family:var(--ff-head);font-size:18px;font-style:italic;color:var(--cream);margin-bottom:4px}
-    .footer-tagline{font-family:var(--ff-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--parchment);margin-bottom:1.25rem;opacity:.7}
-    .footer-divider{border:none;border-top:1px solid rgba(245,239,224,.12);margin-bottom:1.25rem}
-    .footer-newsletter p{font-size:13px;color:var(--parchment);margin-bottom:.65rem;opacity:.75}
-    .nl-row{display:flex;border:1px solid rgba(245,239,224,.2);border-radius:var(--radius);overflow:hidden;margin-bottom:1.25rem}
-    #input-email{flex:1;background:rgba(245,239,224,.06);border:none;outline:none;padding:10px 12px;font-family:var(--ff-body);font-size:13px;color:var(--cream)}
+    .sf-grid{display:grid;gap:.75rem}
+    .sf-row{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+    .sf-field label{
+      display:block;font-family:var(--ff-mono);font-size:10px;
+      letter-spacing:.6px;text-transform:uppercase;color:var(--ink-soft);
+      margin-bottom:4px;
+    }
+    .sf-field input,.sf-field select,.sf-field textarea{
+      width:100%;border:1.5px solid var(--border);border-radius:var(--radius);
+      padding:9px 11px;font-family:var(--ff-body);font-size:13px;
+      background:#fff;color:var(--ink);outline:none;transition:border-color .2s;
+    }
+    .sf-field input:focus,.sf-field select:focus,.sf-field textarea:focus{
+      border-color:var(--green)}
+    .sf-field textarea{min-height:70px;resize:vertical}
+
+    /* Photo upload in seller form */
+    #sf-photo-btn{
+      width:100%;padding:1.25rem;background:#fff;
+      border:2px dashed var(--border);border-radius:var(--radius);
+      font-size:14px;font-family:var(--ff-body);color:var(--ink-soft);
+      cursor:pointer;text-align:center;line-height:1.8;transition:border-color .2s;
+    }
+    #sf-photo-btn:hover{border-color:var(--green)}
+    #sf-photo-input{position:absolute;width:1px;height:1px;opacity:0}
+    #sf-preview{
+      width:100%;aspect-ratio:4/3;object-fit:cover;
+      border-radius:var(--radius);display:none;border:1px solid var(--border);
+      margin-top:.5rem;
+    }
+
+    .btn-seller-submit{
+      width:100%;background:var(--terra);color:#fff;border:none;
+      border-radius:var(--radius);padding:12px;font-family:var(--ff-mono);
+      font-size:12px;letter-spacing:.6px;text-transform:uppercase;
+      margin-top:.5rem;transition:background .2s;display:flex;
+      align-items:center;justify-content:center;gap:8px;
+    }
+    .btn-seller-submit:hover{background:#922F12}
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    #footer{background:var(--ink);color:var(--cream-dark);
+      padding:2rem 1.25rem 1.5rem}
+    .footer-logo{font-family:var(--ff-head);font-size:18px;font-style:italic;
+      color:var(--cream);margin-bottom:4px}
+    .footer-tagline{font-family:var(--ff-mono);font-size:10px;letter-spacing:1.5px;
+      text-transform:uppercase;opacity:.7;margin-bottom:1.25rem}
+    .footer-divider{border:none;border-top:1px solid rgba(245,239,224,.12);
+      margin-bottom:1.25rem}
+    .footer-newsletter p{font-size:13px;opacity:.7;margin-bottom:.65rem}
+    .nl-row{display:flex;border:1px solid rgba(245,239,224,.2);
+      border-radius:var(--radius);overflow:hidden;margin-bottom:1.25rem}
+    #input-email{flex:1;background:rgba(245,239,224,.06);border:none;
+      outline:none;padding:10px 12px;font-family:var(--ff-body);font-size:13px;
+      color:var(--cream)}
     #input-email::placeholder{color:rgba(245,239,224,.35)}
-    .nl-btn{background:var(--terra);border:none;color:#fff;padding:10px 14px;font-family:var(--ff-mono);font-size:11px;text-transform:uppercase;transition:background .2s}
-    .nl-btn:hover{background:#92300F}
-    .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:.35rem 1rem;margin-bottom:1.25rem}
-    .footer-links a{font-size:13px;color:var(--parchment);opacity:.65;transition:opacity .2s}
+    .nl-btn{background:var(--terra);border:none;color:#fff;padding:10px 14px;
+      font-family:var(--ff-mono);font-size:11px;text-transform:uppercase;
+      transition:background .2s}
+    .nl-btn:hover{background:#922F12}
+    .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:.3rem 1rem;
+      margin-bottom:1.25rem}
+    .footer-links a{font-size:13px;opacity:.6;transition:opacity .2s}
     .footer-links a:hover{opacity:1}
-    .footer-social{display:flex;gap:.65rem;margin-bottom:1.25rem;flex-wrap:wrap}
-    .social-btn{background:rgba(245,239,224,.08);border:1px solid rgba(245,239,224,.16);color:var(--parchment);border-radius:var(--radius);padding:7px 12px;font-family:var(--ff-mono);font-size:11px;transition:background .2s;text-decoration:none;display:inline-block}
+    .footer-social{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.25rem}
+    .social-btn{background:rgba(245,239,224,.08);border:1px solid rgba(245,239,224,.15);
+      color:var(--cream-dark);border-radius:var(--radius);padding:7px 12px;
+      font-family:var(--ff-mono);font-size:11px;transition:background .2s;
+      text-decoration:none;display:inline-block}
     .social-btn:hover{background:rgba(245,239,224,.16)}
-    .footer-copy{font-family:var(--ff-mono);font-size:10px;letter-spacing:.4px;color:var(--parchment);opacity:.4;text-align:center;padding-top:1rem;border-top:1px solid rgba(245,239,224,.08)}
+    .footer-copy{font-family:var(--ff-mono);font-size:10px;letter-spacing:.4px;
+      opacity:.35;text-align:center;padding-top:1rem;
+      border-top:1px solid rgba(245,239,224,.08)}
 
-    /* ── FLOATING WA ── */
-    #wa-float{position:fixed;bottom:1.25rem;right:1.25rem;z-index:1000;background:#25D366;color:#fff;border:none;border-radius:50px;padding:12px 18px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.3px;box-shadow:0 4px 20px rgba(37,211,102,.35);display:flex;align-items:center;gap:7px;transition:transform .2s,box-shadow .2s}
+    /* ══════════════════════════════════════════
+       FLOATING WA
+    ══════════════════════════════════════════ */
+    #wa-float{
+      position:fixed;bottom:1.25rem;right:1.25rem;z-index:1000;
+      background:#25D366;color:#fff;border:none;border-radius:50px;
+      padding:11px 16px;font-family:var(--ff-mono);font-size:12px;
+      letter-spacing:.3px;box-shadow:0 4px 20px rgba(37,211,102,.35);
+      display:flex;align-items:center;gap:6px;transition:transform .2s,box-shadow .2s;
+    }
     #wa-float:hover{transform:scale(1.04);box-shadow:0 6px 26px rgba(37,211,102,.45)}
 
-    /* ── PAYSTACK MODAL ── */
-    #pay-modal{display:none;position:fixed;inset:0;background:rgba(43,30,18,.6);z-index:2000;align-items:flex-end;justify-content:center}
+    /* ══════════════════════════════════════════
+       PAY MODAL
+    ══════════════════════════════════════════ */
+    #pay-modal{
+      display:none;position:fixed;inset:0;background:rgba(43,30,18,.6);
+      z-index:3000;align-items:flex-end;justify-content:center;
+    }
     #pay-modal.open{display:flex}
-    .pay-sheet{background:#fff;border-radius:16px 16px 0 0;padding:1.5rem 1.25rem 2rem;width:100%;max-width:480px}
-    .pay-sheet h3{font-family:var(--ff-head);font-size:18px;color:var(--ink);margin-bottom:.25rem}
-    .pay-sheet .pay-price{font-family:var(--ff-mono);font-size:20px;color:var(--green);margin-bottom:1rem}
-    .pay-sheet label{font-family:var(--ff-mono);font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:3px;margin-top:.75rem}
-    .pay-sheet input{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-family:var(--ff-body);font-size:14px;color:var(--ink);outline:none}
-    .pay-sheet input:focus{border-color:var(--green)}
-    .pay-actions{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1.25rem}
-    .btn-pay-confirm{background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:12px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.5px;text-transform:uppercase;transition:background .2s}
+    .pay-sheet{
+      background:#fff;border-radius:16px 16px 0 0;
+      padding:1.5rem 1.25rem 2rem;width:100%;max-width:480px;
+    }
+    .pay-sheet h3{font-family:var(--ff-head);font-size:17px;
+      color:var(--ink);margin-bottom:.25rem}
+    .pay-price{font-family:var(--ff-mono);font-size:19px;
+      color:var(--green);margin-bottom:1rem}
+    .pay-sheet label{font-family:var(--ff-mono);font-size:10px;
+      letter-spacing:.6px;text-transform:uppercase;color:var(--ink-soft);
+      display:block;margin-bottom:3px;margin-top:.75rem}
+    .pay-sheet input{width:100%;border:1px solid var(--border);
+      border-radius:var(--radius);padding:10px 12px;font-family:var(--ff-body);
+      font-size:14px;color:var(--ink);outline:none}
+    .pay-actions{display:grid;grid-template-columns:1fr 1fr;
+      gap:.6rem;margin-top:1.25rem}
+    .btn-pay-confirm{background:var(--green);color:#fff;border:none;
+      border-radius:var(--radius);padding:12px;font-family:var(--ff-mono);
+      font-size:12px;letter-spacing:.5px;text-transform:uppercase;
+      transition:background .2s}
     .btn-pay-confirm:hover{background:var(--green-mid)}
-    .btn-pay-cancel{background:var(--cream-alt);color:var(--ink-soft);border:none;border-radius:var(--radius);padding:12px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.5px;text-transform:uppercase}
+    .btn-pay-cancel{background:var(--cream-alt);color:var(--ink-soft);
+      border:none;border-radius:var(--radius);padding:12px;
+      font-family:var(--ff-mono);font-size:12px;letter-spacing:.5px;
+      text-transform:uppercase}
+
+    /* ══════════════════════════════════════════
+       ORDER TRACKER MODAL
+    ══════════════════════════════════════════ */
+    #orders-modal{
+      display:none;position:fixed;inset:0;background:rgba(43,30,18,.6);
+      z-index:3000;align-items:center;justify-content:center;padding:1rem;
+    }
+    #orders-modal.open{display:flex}
+    .orders-sheet{
+      background:#fff;border-radius:14px;
+      padding:1.5rem 1.25rem;width:100%;max-width:420px;
+    }
+    .orders-sheet h3{font-family:var(--ff-head);font-size:18px;
+      margin-bottom:.5rem}
+    .orders-sheet p{font-size:13px;color:var(--ink-soft);margin-bottom:1rem;
+      line-height:1.6}
+    .orders-sheet input{width:100%;border:1.5px solid var(--border);
+      border-radius:var(--radius);padding:10px 12px;font-size:14px;
+      font-family:var(--ff-body);color:var(--ink);outline:none;
+      margin-bottom:.75rem}
+    .orders-sheet input:focus{border-color:var(--green)}
+    .btn-track{
+      width:100%;background:var(--green);color:#fff;border:none;
+      border-radius:var(--radius);padding:11px;font-family:var(--ff-mono);
+      font-size:12px;letter-spacing:.5px;text-transform:uppercase;
+      margin-bottom:.5rem;transition:background .2s;
+    }
+    .btn-track:hover{background:var(--green-mid)}
+    .btn-close-orders{
+      width:100%;background:var(--cream-alt);color:var(--ink-soft);
+      border:none;border-radius:var(--radius);padding:10px;
+      font-family:var(--ff-mono);font-size:12px;
+    }
+    #track-result{
+      background:var(--green-lt);border:1px solid #8AB49A;
+      border-radius:var(--radius);padding:.85rem;margin-top:.75rem;
+      font-size:13px;color:var(--green);display:none;line-height:1.6;
+    }
   </style>
 </head>
 <body>
 
-<!-- HERO -->
+<!-- ══ OVERLAYS ══ -->
+<div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+<div class="menu-overlay" id="cart-overlay" onclick="closeCart()"></div>
+
+<!-- ══════════════════════════════════════════
+     SIDE MENU
+══════════════════════════════════════════ -->
+<nav id="side-menu" aria-label="Main menu">
+  <div class="menu-header">
+    <div class="menu-logo">The Container Market</div>
+    <button id="menu-close" onclick="closeMenu()" aria-label="Close menu">✕</button>
+  </div>
+
+  <div class="menu-section">
+    <div class="menu-section-label">Shop</div>
+    <button class="menu-item" onclick="filterFromMenu('all')">
+      <span class="mi-icon">🏠</span>
+      <span class="mi-label">All Products</span>
+    </button>
+    <button class="menu-item" onclick="filterFromMenu('decor')">
+      <span class="mi-icon">🖼</span>
+      <span class="mi-label">Wall Décor</span>
+    </button>
+    <button class="menu-item" onclick="filterFromMenu('clocks')">
+      <span class="mi-icon">🕰</span>
+      <span class="mi-label">Clocks</span>
+    </button>
+    <button class="menu-item" onclick="filterFromMenu('lighting')">
+      <span class="mi-icon">💡</span>
+      <span class="mi-label">Lighting</span>
+    </button>
+    <button class="menu-item" onclick="filterFromMenu('ceramics')">
+      <span class="mi-icon">🏺</span>
+      <span class="mi-label">Ceramics & Vases</span>
+    </button>
+    <button class="menu-item" onclick="filterFromMenu('textiles')">
+      <span class="mi-icon">🧵</span>
+      <span class="mi-label">Textiles & Rugs</span>
+    </button>
+    <button class="menu-item" onclick="filterFromMenu('collectibles')">
+      <span class="mi-icon">⭐</span>
+      <span class="mi-label">Collectibles</span>
+    </button>
+    <button class="menu-item" onclick="filterFromMenu('essentials')">
+      <span class="mi-icon">🔧</span>
+      <span class="mi-label">Home Essentials</span>
+    </button>
+    <button class="menu-item" onclick="filterFromMenu('stationery')">
+      <span class="mi-icon">✏️</span>
+      <span class="mi-label">Stationery</span>
+    </button>
+  </div>
+
+  <hr class="menu-divider"/>
+
+  <div class="menu-section">
+    <div class="menu-section-label">My Account</div>
+    <button class="menu-item" onclick="openCart();closeMenu()">
+      <span class="mi-icon">🛒</span>
+      <span class="mi-label">My Cart</span>
+      <span class="mi-badge" id="menu-cart-count" style="display:none">0</span>
+    </button>
+    <button class="menu-item" onclick="openWishlistWA();closeMenu()">
+      <span class="mi-icon">❤️</span>
+      <span class="mi-label">My Wishlist</span>
+    </button>
+    <button class="menu-item" onclick="openOrderTracker();closeMenu()">
+      <span class="mi-icon">📦</span>
+      <span class="mi-label">Track My Order</span>
+    </button>
+  </div>
+
+  <hr class="menu-divider"/>
+
+  <div class="menu-section">
+    <div class="menu-section-label">Sell with us</div>
+    <button class="menu-item" onclick="openSellerForm();closeMenu()">
+      <span class="mi-icon">📷</span>
+      <span class="mi-label">List an Item</span>
+    </button>
+    <button class="menu-item" onclick="window.open('https://wa.me/2348000000000?text=Hi! I want to sell on thecontainermarket.ng','_blank','noopener')">
+      <span class="mi-icon">💬</span>
+      <span class="mi-label">Chat with us</span>
+    </button>
+  </div>
+
+  <hr class="menu-divider"/>
+
+  <div class="menu-section">
+    <div class="menu-section-label">Info</div>
+    <button class="menu-item" onclick="closeMenu()">
+      <span class="mi-icon">ℹ️</span>
+      <span class="mi-label">How it works</span>
+    </button>
+    <button class="menu-item" onclick="closeMenu()">
+      <span class="mi-icon">🚚</span>
+      <span class="mi-label">Delivery & Pickup</span>
+    </button>
+    <button class="menu-item" onclick="closeMenu()">
+      <span class="mi-icon">↩️</span>
+      <span class="mi-label">Returns Policy</span>
+    </button>
+  </div>
+
+  <button class="menu-wa-btn" onclick="window.open('https://wa.me/2348000000000','_blank','noopener')">
+    💬 Chat on WhatsApp
+  </button>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     CART DRAWER
+══════════════════════════════════════════ -->
+<div id="cart-drawer" aria-label="Shopping cart" role="complementary">
+  <div class="cart-header">
+    <h3>🛒 My Cart</h3>
+    <button id="cart-close" onclick="closeCart()" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items-list">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      Your cart is empty.<br>Tap <strong>Add to Cart</strong> on any product.
+    </div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-subtotal">
+      <span>Subtotal</span>
+      <span id="cart-subtotal-val">₦0</span>
+    </div>
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cart-total-val">₦0</span>
+    </div>
+    <button class="btn-checkout" onclick="checkoutPaystack()">
+      Pay with Paystack
+    </button>
+    <button class="btn-wa-checkout" onclick="checkoutWA()">
+      💬 Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
 <header id="hero" role="banner">
   <nav class="hero-topbar" aria-label="Site navigation">
     <div class="logo" aria-label="The Container Market">
       The Container Market
       <span>thecontainermarket.ng</span>
     </div>
-    <div class="topbar-actions">
-      <button id="btn-wishlist" aria-label="View wishlist">🤍 Saved</button>
-      <button id="btn-menu" aria-label="Menu">☰</button>
+    <div class="topbar-right">
+      <button id="cart-btn" onclick="openCart()" aria-label="Shopping cart">
+        🛒 Cart <span id="cart-count" aria-live="polite">0</span>
+      </button>
+      <button id="btn-wishlist" aria-label="Wishlist">🤍</button>
+      <button id="btn-menu" onclick="openMenu()" aria-label="Open menu">☰</button>
     </div>
   </nav>
+
   <div class="hero-body">
     <p class="hero-eyebrow">Lagos · Nigeria · Free Delivery on Orders ₦50k+</p>
-    <h1 class="hero-headline">Vintage finds.<br><em>Real bargains.</em><br>Delivered.</h1>
+    <h1 class="hero-headline">
+      Vintage finds.<br><em>Real bargains.</em><br>Delivered.
+    </h1>
     <p class="hero-sub">Curated interior pieces, décor & stationery — direct from seller. Buy online or enquire on WhatsApp.</p>
     <div class="hero-search" role="search">
       <label for="input-search" class="visually-hidden">Search products</label>
-      <input id="input-search" type="search" placeholder="Search: clock, lamp, stapler…" autocomplete="off"/>
+      <input id="input-search" type="search" placeholder="Search: clock, lamp, vase…" autocomplete="off"/>
       <button type="button" aria-label="Search">Search</button>
     </div>
     <div class="hero-stats">
-      <div class="stat-pill"><strong>33+</strong> Live listings</div>
-      <div class="stat-pill"><strong>₦4,500 – ₦95k</strong> Price range</div>
-      <div class="stat-pill"><strong>Same-day</strong> WA leads</div>
+      <div class="stat-pill"><strong>35+</strong> Live listings</div>
+      <div class="stat-pill"><strong>₦4,500 – ₦85k</strong> Price range</div>
+      <div class="stat-pill">🚚 Lagos delivery</div>
     </div>
   </div>
+
   <div class="hero-filters" role="group" aria-label="Filter by category">
-    <button class="filter-chip active" aria-pressed="true" data-filter="all">All Items</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="decor">Wall Décor</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="clocks">Clocks</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="lighting">Lighting</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="ceramics">Ceramics</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="textiles">Textiles</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="collectibles">Collectibles</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="essentials">Home Essentials</button>
-    <button class="filter-chip" aria-pressed="false" data-filter="stationery">Stationery</button>
+    <button class="filter-chip active" data-filter="all" aria-pressed="true">All</button>
+    <button class="filter-chip" data-filter="decor" aria-pressed="false">Wall Décor</button>
+    <button class="filter-chip" data-filter="clocks" aria-pressed="false">Clocks</button>
+    <button class="filter-chip" data-filter="lighting" aria-pressed="false">Lighting</button>
+    <button class="filter-chip" data-filter="ceramics" aria-pressed="false">Ceramics</button>
+    <button class="filter-chip" data-filter="textiles" aria-pressed="false">Textiles</button>
+    <button class="filter-chip" data-filter="collectibles" aria-pressed="false">Collectibles</button>
+    <button class="filter-chip" data-filter="essentials" aria-pressed="false">Essentials</button>
+    <button class="filter-chip" data-filter="stationery" aria-pressed="false">Stationery</button>
   </div>
 </header>
 
-<!-- MAIN -->
+<!-- ══════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════ -->
 <main id="main">
   <section id="insights-panel" aria-label="Market insights">
     <span class="insights-icon" aria-hidden="true">✦</span>
     <div class="insights-text">
       <div class="insights-label">Today's pick</div>
-      <p class="insights-msg"><strong>Clocks & lighting</strong> are most-enquired this week. Scroll down to see 6 unique pieces.</p>
+      <p class="insights-msg"><strong>Clocks & lighting</strong> are most-enquired this week. Scroll down to see all pieces.</p>
     </div>
     <button id="insights-refresh" aria-label="Refresh insight">↺</button>
   </section>
 
   <div class="section-head">
     <h2>All <em>listings</em></h2>
-    <a href="#list-root">35 items →</a>
+    <a href="#list-root" id="items-count-link">35 items →</a>
   </div>
 
   <ul id="list-root" aria-label="Product listings">
@@ -224,6 +814,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *"DREAM" Wall Sign* (₦12,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="&quot;DREAM&quot; Wall Sign" data-price="12000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="&quot;DREAM&quot; Wall Sign" data-price="12000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -240,6 +832,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *"FAITH" Metal Letters* (₦12,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="&quot;FAITH&quot; Metal Letters" data-price="12000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="&quot;FAITH&quot; Metal Letters" data-price="12000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -256,6 +850,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Butterfly Wall Plaque* (₦12,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Butterfly Wall Plaque" data-price="12000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Butterfly Wall Plaque" data-price="12000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -272,6 +868,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *FRIENDS Animal Figurines* (₦22,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="FRIENDS Animal Figurines" data-price="22000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="FRIENDS Animal Figurines" data-price="22000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -288,6 +886,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Ampersand Wall Art* (₦30,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Ampersand Wall Art" data-price="30000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Ampersand Wall Art" data-price="30000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -304,6 +904,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *"It's the Little Things"* (₦30,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="&quot;It&#39;s the Little Things&quot;" data-price="30000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="&quot;It&#39;s the Little Things&quot;" data-price="30000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -320,6 +922,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Black Metal Circle Sculpture* (₦45,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Black Metal Circle Sculpture" data-price="45000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Black Metal Circle Sculpture" data-price="45000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -336,6 +940,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Industrial Station Clock* (₦45,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Industrial Station Clock" data-price="45000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Industrial Station Clock" data-price="45000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -352,6 +958,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Vintage Gear Wall Clock* (₦38,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Vintage Gear Wall Clock" data-price="38000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Vintage Gear Wall Clock" data-price="38000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -368,6 +976,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Geometric Wire Clock* (₦38,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Geometric Wire Clock" data-price="38000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Geometric Wire Clock" data-price="38000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -384,6 +994,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Ceramic Clock & Vase Set* (₦35,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Ceramic Clock & Vase Set" data-price="35000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Ceramic Clock & Vase Set" data-price="35000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -400,6 +1012,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *LED Decorative Tealights* (₦8,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="LED Decorative Tealights" data-price="8000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="LED Decorative Tealights" data-price="8000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -416,6 +1030,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Gold Globe Table Lamp* (₦35,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Gold Globe Table Lamp" data-price="35000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Gold Globe Table Lamp" data-price="35000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -432,6 +1048,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *LED Dual-Head Floor Lamp* (₦85,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="LED Dual-Head Floor Lamp" data-price="85000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="LED Dual-Head Floor Lamp" data-price="85000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -448,6 +1066,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Moroccan Filigree Lantern* (₦35,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Moroccan Filigree Lantern" data-price="35000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Moroccan Filigree Lantern" data-price="35000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -464,6 +1084,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Torchiere Floor Lamp* (₦55,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Torchiere Floor Lamp" data-price="55000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Torchiere Floor Lamp" data-price="55000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -480,6 +1102,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Blue & White Vase Set* (₦45,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Blue & White Vase Set" data-price="45000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Blue & White Vase Set" data-price="45000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -496,6 +1120,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Round Mirror Frames* (₦14,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Round Mirror Frames" data-price="14000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Round Mirror Frames" data-price="14000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -512,6 +1138,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Iris Blue Ceramic Planter* (₦22,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Iris Blue Ceramic Planter" data-price="22000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Iris Blue Ceramic Planter" data-price="22000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -528,6 +1156,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Floral Relief Ceramic Bowl* (₦19,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Floral Relief Ceramic Bowl" data-price="19000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Floral Relief Ceramic Bowl" data-price="19000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -544,6 +1174,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Terracotta Plant Pots* (₦8,500) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Terracotta Plant Pots" data-price="8500">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Terracotta Plant Pots" data-price="8500" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -560,6 +1192,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Linen Blend Curtains* (₦38,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Linen Blend Curtains" data-price="38000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Linen Blend Curtains" data-price="38000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -576,6 +1210,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Grey Abstract Runner Rug* (₦65,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Grey Abstract Runner Rug" data-price="65000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Grey Abstract Runner Rug" data-price="65000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -592,6 +1228,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Black Marble Elephant Bookend* (₦32,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Black Marble Elephant Bookend" data-price="32000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Black Marble Elephant Bookend" data-price="32000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -608,6 +1246,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Rustic Barn Star* (₦9,500) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Rustic Barn Star" data-price="9500">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Rustic Barn Star" data-price="9500" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -624,6 +1264,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Artist Wooden Easel* (₦18,500) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Artist Wooden Easel" data-price="18500">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Artist Wooden Easel" data-price="18500" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -640,6 +1282,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Door Stopper Set* (₦6,500) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Door Stopper Set" data-price="6500">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Door Stopper Set" data-price="6500" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -656,6 +1300,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Door & Window Alarm* (₦7,500) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Door & Window Alarm" data-price="7500">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Door & Window Alarm" data-price="7500" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -672,6 +1318,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Twist Ties Spool* (₦4,500) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Twist Ties Spool" data-price="4500">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Twist Ties Spool" data-price="4500" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -688,6 +1336,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Joeski Wall Mug Holder* (₦8,500) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Joeski Wall Mug Holder" data-price="8500">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Joeski Wall Mug Holder" data-price="8500" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -704,6 +1354,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Mini Stapler Set — Yellow* (₦10,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Mini Stapler Set — Yellow" data-price="10000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Mini Stapler Set — Yellow" data-price="10000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -720,6 +1372,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Mini Stapler Set — Red* (₦10,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Mini Stapler Set — Red" data-price="10000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Mini Stapler Set — Red" data-price="10000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -736,6 +1390,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Tape Dispenser with Tape* (₦10,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Tape Dispenser with Tape" data-price="10000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Tape Dispenser with Tape" data-price="10000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -752,6 +1408,8 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Paper Punch* (₦10,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Paper Punch" data-price="10000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Paper Punch" data-price="10000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
@@ -768,53 +1426,114 @@
         <div class="card-actions">
           <button class="btn-enquire" data-wa="Hi! I'm interested in the *Eraser Tool Designs* (₦10,000) on thecontainermarket.ng. Is it still available?">WA Enquire</button>
           <button class="btn-buy" data-product="Eraser Tool Designs" data-price="10000">Buy Now</button>
+        
+          <button class="btn-cart" data-product="Eraser Tool Designs" data-price="10000" aria-label="Add to cart">🛒 Add to Cart</button>
         </div>
       </div>
     </li>
   </ul>
 
-  <!-- Offer strip -->
-  <section id="offer-strip" aria-live="polite" aria-label="Make an offer">
-    <h3>Make an offer</h3>
-    <div class="offer-form">
-      <div><label for="input-offer-item">Item</label><input id="input-offer-item" type="text" readonly/></div>
-      <div><label for="input-offer-amount">Your offer (₦)</label><input id="input-offer-amount" type="number" placeholder="e.g. 12000"/></div>
-      <div><label for="input-offer-name">Your name</label><input id="input-offer-name" type="text" placeholder="Amaka O."/></div>
-      <div><label for="input-offer-wa">WhatsApp number</label><input id="input-offer-wa" type="tel" placeholder="+234 800 000 0000"/></div>
-      <button id="btn-primary" type="button">💬 Send offer via WhatsApp</button>
+  <!-- ══ SELLER UPLOAD ══ -->
+  <section id="seller-section" aria-label="Sell with us">
+    <div class="seller-header" onclick="toggleSellerForm()" role="button" tabindex="0" aria-expanded="false">
+      <div>
+        <h3>Got a piece to sell?</h3>
+        <p>List your item — we handle enquiries same day</p>
+      </div>
+      <span class="seller-toggle" id="seller-toggle-icon">▼</span>
+    </div>
+    <div class="seller-form" id="seller-form">
+      <div class="sf-grid">
+        <div class="sf-field">
+          <label>Photo of your item *</label>
+          <input type="file" id="sf-photo-input" accept="image/*"
+                 style="position:absolute;width:1px;height:1px;opacity:0"
+                 onchange="sfPhotoSelected(event)"/>
+          <button type="button" id="sf-photo-btn" onclick="document.getElementById('sf-photo-input').click()">
+            📷 Tap to upload your photo
+          </button>
+          <img id="sf-preview" alt="Item preview"/>
+        </div>
+        <div class="sf-row">
+          <div class="sf-field">
+            <label>Item name *</label>
+            <input id="sf-name" type="text" placeholder="e.g. Wooden wall art"/>
+          </div>
+          <div class="sf-field">
+            <label>Category</label>
+            <select id="sf-cat">
+              <option value="Décor">Wall Décor</option>
+              <option value="Clocks">Clocks</option>
+              <option value="Lighting">Lighting</option>
+              <option value="Ceramics">Ceramics</option>
+              <option value="Textiles">Textiles</option>
+              <option value="Collectibles">Collectibles</option>
+              <option value="Essentials">Home Essentials</option>
+              <option value="Stationery">Stationery</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="sf-row">
+          <div class="sf-field">
+            <label>Your price (₦) *</label>
+            <input id="sf-price" type="number" placeholder="e.g. 15000"/>
+          </div>
+          <div class="sf-field">
+            <label>Condition</label>
+            <select id="sf-condition">
+              <option>New</option>
+              <option>Like new</option>
+              <option>Good</option>
+              <option>Fair</option>
+            </select>
+          </div>
+        </div>
+        <div class="sf-field">
+          <label>Description</label>
+          <textarea id="sf-desc" placeholder="Describe the item — size, material, any defects…"></textarea>
+        </div>
+        <div class="sf-field">
+          <label>Your WhatsApp number *</label>
+          <input id="sf-wa" type="tel" placeholder="+234 800 000 0000"/>
+        </div>
+        <div class="sf-field">
+          <label>Your name</label>
+          <input id="sf-seller-name" type="text" placeholder="Amaka O."/>
+        </div>
+        <button class="btn-seller-submit" onclick="submitSellerForm()">
+          💬 Send listing to us via WhatsApp
+        </button>
+      </div>
     </div>
   </section>
-
-  <!-- Vendor CTA -->
-  <aside id="vendor-cta" aria-label="Sell with us">
-    <h3>Got a piece to sell?</h3>
-    <p>Upload a photo or send a WhatsApp description — we'll list it same day.</p>
-    <div class="vendor-actions">
-      <button class="btn-vendor" id="btn-vendor-upload">📷 Upload listing</button>
-      <a class="btn-vendor-wa" href="https://wa.me/2348000000000?text=Hi%2C+I%27d+like+to+list+an+item+on+thecontainermarket.ng" target="_blank" rel="noopener">💬 List via WhatsApp</a>
-    </div>
-  </aside>
 </main>
 
-<!-- FOOTER -->
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
 <footer id="footer" role="contentinfo">
   <div class="footer-logo">The Container Market</div>
-  <p class="footer-tagline">Vintage &amp; Bargain Interiors · Nigeria</p>
+  <p class="footer-tagline">Vintage & Bargain Interiors · Nigeria</p>
   <hr class="footer-divider"/>
   <div class="footer-newsletter">
     <p>New arrivals weekly. No spam.</p>
     <div class="nl-row">
-      <label for="input-email" class="visually-hidden">Email for newsletter</label>
+      <label for="input-email" class="visually-hidden">Email</label>
       <input id="input-email" type="email" placeholder="your@email.com"/>
-      <button class="nl-btn" type="button">Subscribe</button>
+      <button class="nl-btn" type="button" onclick="subscribeNewsletter()">Subscribe</button>
     </div>
   </div>
   <nav aria-label="Footer links">
     <div class="footer-links">
-      <a href="#">How it works</a><a href="#">Sell with us</a>
-      <a href="#">Wishlist</a><a href="#">Make an offer</a>
-      <a href="#">Delivery &amp; pickup</a><a href="#">FAQs</a>
-      <a href="#">Paystack secure</a><a href="#">Contact</a>
+      <a href="#">How it works</a>
+      <a href="#">Sell with us</a>
+      <a href="#">Track my order</a>
+      <a href="#">Make an offer</a>
+      <a href="#">Delivery & pickup</a>
+      <a href="#">FAQs</a>
+      <a href="#">Secure payments</a>
+      <a href="#">Contact us</a>
     </div>
   </nav>
   <div class="footer-social">
@@ -827,14 +1546,17 @@
 
 <!-- Floating WhatsApp -->
 <button id="wa-float" aria-label="Chat on WhatsApp">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.554 4.124 1.528 5.855L0 24l6.335-1.512A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.638-.504-5.15-1.385l-.37-.22-3.762.898.938-3.65-.24-.383A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.554 4.124 1.528 5.855L0 24l6.335-1.512A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.638-.504-5.15-1.385l-.37-.22-3.762.898.938-3.65-.24-.383A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+  </svg>
   Chat with us
 </button>
 
-<!-- Paystack payment modal -->
+<!-- Paystack pay modal -->
 <div id="pay-modal" role="dialog" aria-modal="true" aria-label="Complete purchase">
   <div class="pay-sheet">
-    <h3 id="pay-item-name">Item name</h3>
+    <h3 id="pay-item-name">Item</h3>
     <div class="pay-price" id="pay-item-price"></div>
     <label for="pay-email">Email address</label>
     <input id="pay-email" type="email" placeholder="you@email.com" autocomplete="email"/>
@@ -846,6 +1568,18 @@
       <button class="btn-pay-cancel" id="pay-cancel">Cancel</button>
       <button class="btn-pay-confirm" id="pay-confirm">Pay with Paystack</button>
     </div>
+  </div>
+</div>
+
+<!-- Order tracker modal -->
+<div id="orders-modal" role="dialog" aria-modal="true">
+  <div class="orders-sheet">
+    <h3>📦 Track My Order</h3>
+    <p>Enter the phone number or email you used when ordering. We'll send your order status via WhatsApp.</p>
+    <input id="track-input" type="text" placeholder="Phone number or email"/>
+    <button class="btn-track" onclick="submitTrack()">Send me my order status</button>
+    <button class="btn-close-orders" onclick="closeOrderTracker()">Cancel</button>
+    <div id="track-result"></div>
   </div>
 </div>
 
