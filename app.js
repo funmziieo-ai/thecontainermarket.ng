@@ -2,8 +2,8 @@
 
 /* ── CONFIG ── update these before going live ── */
 const CONFIG = {
-  whatsappNumber: '2349052352101',        // 
-  paystackKey:    'pk_live_23599f601df7f401fab266eb761ae168bc88dc43',   // 
+  whatsappNumber: '2349052352101',        // ← update with your real WA number
+  paystackKey:    'pk_live_23599f601df7f401fab266eb761ae168bc88dc43',
   siteName:       'thecontainermarket.ng',
   currency:       'NGN',
 };
@@ -38,110 +38,134 @@ function toast(msg, type='info'){
    LIGHTBOX — tap photo to open, swipe between
    multiple images of the same product
    ════════════════════════════════════════════ */
-let lbImages = [];   // array of src strings for current product
-let lbIndex  = 0;    // which image is showing
+let lbImages = [];
+let lbIndex  = 0;
 let lbTouchStartX = 0;
+
+/* Called directly from onclick on .card-img div */
+function handleCardImgClick(event, el){
+  // Don't trigger if wishlist heart button was tapped
+  if(event.target.classList.contains('card-wishlist')) return;
+  if(event.target.closest('.card-wishlist')) return;
+
+  const img = el.querySelector('img');
+  if(!img || !img.src) return;
+
+  const extraRaw = el.dataset.images || '';
+  const extras   = extraRaw ? extraRaw.split('||').filter(Boolean) : [];
+  const all      = [img.src, ...extras];
+  openLightbox(all, 0);
+}
 
 function buildLightbox(){
   if($('tcm-lightbox')) return;
-  const lb = document.createElement('div');
-  lb.id = 'tcm-lightbox';
-  lb.setAttribute('role','dialog');
-  lb.setAttribute('aria-modal','true');
-  lb.setAttribute('aria-label','Product image viewer');
-  lb.innerHTML = `
-    <div id="lb-backdrop"></div>
-    <div id="lb-shell">
-      <button id="lb-close" aria-label="Close">✕</button>
-      <button id="lb-prev" aria-label="Previous image">‹</button>
-      <div id="lb-img-wrap">
-        <img id="lb-img" src="" alt="Product image"/>
-        <div id="lb-loader">Loading…</div>
-      </div>
-      <button id="lb-next" aria-label="Next image">›</button>
-      <div id="lb-dots"></div>
-      <div id="lb-counter"></div>
-    </div>`;
 
-  // Inline styles so no external CSS needed
-  lb.style.cssText = `
-    display:none;position:fixed;inset:0;z-index:5000;
-    align-items:center;justify-content:center;`;
-  document.body.appendChild(lb);
-
-  // Inject styles
   const style = document.createElement('style');
   style.textContent = `
-    #tcm-lightbox{display:none}
-    #tcm-lightbox.open{display:flex}
-    #lb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.88);cursor:pointer}
-    #lb-shell{
-      position:relative;z-index:1;display:flex;flex-direction:column;
-      align-items:center;max-width:520px;width:94vw;
+    #tcm-lightbox{
+      display:none;position:fixed;inset:0;z-index:9000;
+      background:rgba(0,0,0,.92);
+      align-items:center;justify-content:center;
+      flex-direction:column;
     }
+    #tcm-lightbox.open{display:flex}
     #lb-close{
-      position:absolute;top:-44px;right:0;background:none;border:none;
-      color:#fff;font-size:28px;cursor:pointer;padding:4px 10px;line-height:1;
+      position:fixed;top:16px;right:16px;
+      background:rgba(255,255,255,.15);border:none;
+      color:#fff;font-size:24px;width:44px;height:44px;
+      border-radius:50%;cursor:pointer;z-index:9001;
+      display:flex;align-items:center;justify-content:center;
+      -webkit-tap-highlight-color:transparent;
     }
     #lb-img-wrap{
-      width:100%;aspect-ratio:3/4;background:#111;border-radius:10px;
-      overflow:hidden;position:relative;user-select:none;
+      width:90vw;max-width:480px;
+      aspect-ratio:3/4;
+      position:relative;
+      touch-action:pan-y pinch-zoom;
     }
     #lb-img{
-      width:100%;height:100%;object-fit:contain;display:block;
-      transition:opacity .2s;
-    }
-    #lb-loader{
-      position:absolute;inset:0;display:flex;align-items:center;
-      justify-content:center;color:#888;font-size:13px;font-family:monospace;
-      pointer-events:none;
+      width:100%;height:100%;
+      object-fit:contain;
+      border-radius:8px;
+      display:block;
+      transition:opacity .18s;
+      -webkit-user-drag:none;
+      user-select:none;
     }
     #lb-prev,#lb-next{
-      position:absolute;top:50%;transform:translateY(-50%);
-      background:rgba(255,255,255,.15);border:none;color:#fff;
-      font-size:28px;width:40px;height:60px;border-radius:6px;
-      cursor:pointer;z-index:2;transition:background .2s;display:none;
+      position:fixed;top:50%;transform:translateY(-50%);
+      background:rgba(255,255,255,.18);border:none;color:#fff;
+      font-size:32px;width:44px;height:64px;
+      border-radius:8px;cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      z-index:9001;
     }
-    #lb-prev{left:-48px} #lb-next{right:-48px}
-    #lb-prev:hover,#lb-next:hover{background:rgba(255,255,255,.28)}
-    @media(max-width:600px){
-      #lb-prev{left:4px;top:auto;bottom:60px;transform:none}
-      #lb-next{right:4px;top:auto;bottom:60px;transform:none}
-    }
+    #lb-prev{left:8px}
+    #lb-next{right:8px}
     #lb-dots{
-      display:flex;gap:6px;margin-top:12px;align-items:center;
-      justify-content:center;min-height:14px;
+      display:flex;gap:8px;margin-top:16px;
+      justify-content:center;min-height:16px;
     }
     .lb-dot{
-      width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);
-      cursor:pointer;transition:background .2s;border:none;padding:0;
+      width:10px;height:10px;border-radius:50%;
+      background:rgba(255,255,255,.35);
+      border:none;cursor:pointer;padding:0;
+      transition:background .15s,transform .15s;
+      -webkit-tap-highlight-color:transparent;
     }
-    .lb-dot.active{background:#fff;transform:scale(1.3)}
+    .lb-dot.active{background:#fff;transform:scale(1.25)}
     #lb-counter{
-      color:rgba(255,255,255,.55);font-size:12px;font-family:monospace;
-      margin-top:6px;min-height:16px;
+      color:rgba(255,255,255,.6);
+      font-size:13px;font-family:monospace;
+      margin-top:8px;
+    }
+    #lb-hint{
+      color:rgba(255,255,255,.4);
+      font-size:11px;font-family:monospace;
+      margin-top:6px;letter-spacing:.5px;
     }
   `;
   document.head.appendChild(style);
 
-  // Events
-  $('lb-backdrop').addEventListener('click', closeLightbox);
+  const lb = document.createElement('div');
+  lb.id = 'tcm-lightbox';
+  lb.setAttribute('role','dialog');
+  lb.setAttribute('aria-modal','true');
+  lb.innerHTML = `
+    <button id="lb-close" aria-label="Close">✕</button>
+    <button id="lb-prev" aria-label="Previous" style="display:none">‹</button>
+    <div id="lb-img-wrap">
+      <img id="lb-img" src="" alt="Product photo"/>
+    </div>
+    <button id="lb-next" aria-label="Next" style="display:none">›</button>
+    <div id="lb-dots"></div>
+    <div id="lb-counter"></div>
+    <div id="lb-hint"></div>
+  `;
+  document.body.appendChild(lb);
+
+  // Close on backdrop tap (not on image)
+  lb.addEventListener('click', e=>{
+    if(e.target===lb) closeLightbox();
+  });
   $('lb-close').addEventListener('click', closeLightbox);
-  $('lb-prev').addEventListener('click', ()=>lbGo(lbIndex - 1));
-  $('lb-next').addEventListener('click', ()=>lbGo(lbIndex + 1));
+  $('lb-prev').addEventListener('click', e=>{ e.stopPropagation(); lbGo(lbIndex-1); });
+  $('lb-next').addEventListener('click', e=>{ e.stopPropagation(); lbGo(lbIndex+1); });
+
+  // Keyboard
   document.addEventListener('keydown', e=>{
     if(!$('tcm-lightbox').classList.contains('open')) return;
     if(e.key==='Escape') closeLightbox();
-    if(e.key==='ArrowLeft') lbGo(lbIndex - 1);
-    if(e.key==='ArrowRight') lbGo(lbIndex + 1);
+    if(e.key==='ArrowLeft') lbGo(lbIndex-1);
+    if(e.key==='ArrowRight') lbGo(lbIndex+1);
   });
 
   // Touch swipe
   const wrap = $('lb-img-wrap');
-  wrap.addEventListener('touchstart', e=>{ lbTouchStartX = e.touches[0].clientX; }, {passive:true});
+  wrap.addEventListener('touchstart', e=>{ lbTouchStartX=e.touches[0].clientX; },{passive:true});
   wrap.addEventListener('touchend', e=>{
     const dx = e.changedTouches[0].clientX - lbTouchStartX;
-    if(Math.abs(dx) > 40){ lbGo(dx < 0 ? lbIndex+1 : lbIndex-1); }
+    if(Math.abs(dx)>40) lbGo(dx<0 ? lbIndex+1 : lbIndex-1);
   });
 }
 
@@ -150,65 +174,50 @@ function openLightbox(images, startIndex=0){
   lbImages = Array.isArray(images) ? images : [images];
   lbIndex  = startIndex;
   $('tcm-lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow='hidden';
   lbRender();
 }
 
 function closeLightbox(){
-  $('tcm-lightbox').classList.remove('open');
-  document.body.style.overflow = '';
+  const lb=$('tcm-lightbox');
+  if(lb){ lb.classList.remove('open'); }
+  document.body.style.overflow='';
 }
 
 function lbGo(idx){
-  if(lbImages.length < 2) return;
-  lbIndex = (idx + lbImages.length) % lbImages.length;
+  if(lbImages.length<2) return;
+  lbIndex=(idx+lbImages.length)%lbImages.length;
   lbRender();
 }
 
 function lbRender(){
-  const img    = $('lb-img');
-  const loader = $('lb-loader');
-  const prev   = $('lb-prev');
-  const next   = $('lb-next');
-  const dots   = $('lb-dots');
-  const counter= $('lb-counter');
-  const multi  = lbImages.length > 1;
+  const img     = $('lb-img');
+  const prev    = $('lb-prev');
+  const next    = $('lb-next');
+  const dots    = $('lb-dots');
+  const counter = $('lb-counter');
+  const hint    = $('lb-hint');
+  const multi   = lbImages.length>1;
 
-  img.style.opacity = '0';
-  loader.textContent = 'Loading…';
+  img.style.opacity='0';
+  const newImg = new Image();
+  newImg.onload = ()=>{ img.src=newImg.src; img.style.opacity='1'; };
+  newImg.src = lbImages[lbIndex];
 
-  img.onload = ()=>{ img.style.opacity='1'; loader.textContent=''; };
-  img.src = lbImages[lbIndex];
-
-  prev.style.display = next.style.display = multi ? 'block' : 'none';
-
-  // Dots
+  prev.style.display = next.style.display = multi?'block':'none';
   dots.innerHTML = multi
-    ? lbImages.map((_,i)=>
-        `<button class="lb-dot ${i===lbIndex?'active':''}" onclick="lbGo(${i})" aria-label="Image ${i+1}"></button>`
-      ).join('') : '';
-
-  counter.textContent = multi ? `${lbIndex+1} / ${lbImages.length}` : '';
+    ? lbImages.map((_,i)=>`<button class="lb-dot${i===lbIndex?' active':''}" onclick="lbGo(${i})"></button>`).join('')
+    : '';
+  counter.textContent = multi?`${lbIndex+1} / ${lbImages.length}`:'';
+  hint.textContent    = multi?'← swipe to see more →':'Tap outside to close';
 }
 
-/* Attach lightbox to all product cards */
+/* Attach cursor style to card images — lightbox click is via onclick in HTML */
 function initLightbox(){
-  document.querySelectorAll('.product-card').forEach(card=>{
-    const img = card.querySelector('.card-img img');
-    if(!img) return;
-
-    // Gather all images for this product
-    // Currently one per card — structure allows multiple via data-images attribute
-    const extraRaw = card.querySelector('.card-img').dataset.images || '';
-    const extras   = extraRaw ? extraRaw.split('||').filter(Boolean) : [];
-    const all      = [img.src, ...extras];
-
-    // Make image tappable
-    img.style.cursor = 'zoom-in';
-    img.addEventListener('click', ()=> openLightbox(all, 0));
-
-    // Also tap the card image div
-    card.querySelector('.card-img').style.cursor = 'zoom-in';
+  document.querySelectorAll('.card-img').forEach(el=>{
+    el.style.cursor='pointer';
+    const img=el.querySelector('img');
+    if(img) img.style.pointerEvents='none'; // let click bubble to div
   });
 }
 
