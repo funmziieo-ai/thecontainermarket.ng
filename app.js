@@ -69,7 +69,7 @@ function cartAdd(product, price, imgSrc){
   saveCart();
   renderCart();
   updateCartBadge();
-  toast(`🛒 "${product}" added to cart`,'success');
+  toast(`"${product}" added to cart`,'success');
 }
 
 function cartRemove(name){
@@ -206,7 +206,7 @@ function syncWishlistUI(){
     btn.setAttribute('aria-pressed',saved?'true':'false');
   });
   const wb=$('btn-wishlist');
-  if(wb){ const n=Wishlist.count(); wb.textContent=n>0?`❤️ ${n}`:'🤍'; }
+  if(wb){ const n=Wishlist.count(); wb.textContent=n>0?`Saved (${n})`:'Saved'; }
 }
 
 function openWishlistWA(){
@@ -354,10 +354,10 @@ function initBuyNow(){
         if(currentItem.name.startsWith('Cart')){
           const summary=cart.map(i=>`• ${i.name} x${i.qty}`).join('\n');
           cart=[]; saveCart(); renderCart(); updateCartBadge();
-          toast('✓ Payment successful! We\'ll contact you on WhatsApp.','success');
+          toast('Payment confirmed. We will contact you on WhatsApp.','success');
           setTimeout(()=>window.open(waLink(`Hi! I paid for my cart on ${CONFIG.siteName}.\nRef: ${response.reference}\nItems:\n${summary}\nName: ${name} | Phone: ${phone}`),'_blank','noopener'),1500);
         } else {
-          toast('✓ Payment done! We\'ll message you on WhatsApp.','success');
+          toast('Payment confirmed. We will message you on WhatsApp.','success');
           setTimeout(()=>window.open(waLink(`Hi! I paid for *${currentItem.name}* on ${CONFIG.siteName}.\nRef: ${response.reference}\nName: ${name} | Phone: ${phone}`),'_blank','noopener'),1500);
         }
       },
@@ -445,7 +445,7 @@ function submitSellerForm(){
   $('sf-seller-name').value='';
   $('sf-preview').style.display='none';
   $('sf-photo-btn').textContent='📷 Tap to upload your photo';
-  toast('Opening WhatsApp with your listing details…','success');
+  toast('Opening WhatsApp with your listing details.','success');
 }
 
 /* ══════════════════════════════════════════
@@ -505,7 +505,7 @@ function initInsights(){
 function subscribeNewsletter(){
   const input=$('input-email');
   if(!input?.value.trim()||!input.value.includes('@')){toast('Enter a valid email.','error');return;}
-  toast('✓ Subscribed! Welcome to thecontainermarket.ng','success');
+  toast('Subscribed. Welcome to thecontainermarket.ng','success');
   input.value='';
 }
 
@@ -524,6 +524,8 @@ function handleCardImgClick(event,el){
   openLightbox([img.src,...extras],0);
 }
 
+let lbRotation=0, lbZoom=1;
+
 function buildLightbox(){
   if($('tcm-lightbox')) return;
   const style=document.createElement('style');
@@ -531,41 +533,96 @@ function buildLightbox(){
     #tcm-lightbox{display:none;position:fixed;inset:0;z-index:9000;
       background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column}
     #tcm-lightbox.open{display:flex}
-    #lb-close{position:fixed;top:16px;right:16px;background:rgba(255,255,255,.15);
-      border:none;color:#fff;font-size:22px;width:44px;height:44px;border-radius:50%;
-      cursor:pointer;z-index:9001;display:flex;align-items:center;justify-content:center}
-    #lb-img-wrap{width:88vw;max-width:460px;aspect-ratio:3/4;position:relative}
-    #lb-img{width:100%;height:100%;object-fit:contain;border-radius:8px;
-      display:block;transition:opacity .18s;user-select:none;-webkit-user-drag:none}
+    #lb-toolbar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;
+      justify-content:space-between;padding:12px 16px;z-index:9002;}
+    #lb-tools{display:flex;gap:8px}
+    #lb-close,#lb-zoom-in,#lb-zoom-out,#lb-rotate{
+      background:rgba(255,255,255,.15);border:none;color:#fff;
+      font-size:18px;width:40px;height:40px;border-radius:50%;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:background .2s;-webkit-tap-highlight-color:transparent;}
+    #lb-close{font-size:20px}
+    #lb-close:hover,#lb-zoom-in:hover,#lb-zoom-out:hover,#lb-rotate:hover{
+      background:rgba(255,255,255,.28)}
+    #lb-img-wrap{
+      width:88vw;max-width:460px;aspect-ratio:3/4;position:relative;
+      overflow:hidden;border-radius:10px;
+    }
+    #lb-img{width:100%;height:100%;object-fit:contain;display:block;
+      transition:opacity .18s, transform .3s ease;
+      user-select:none;-webkit-user-drag:none;
+      -webkit-touch-callout:none;pointer-events:none;
+      transform-origin:center center;}
     #lb-prev,#lb-next{position:fixed;top:50%;transform:translateY(-50%);
       background:rgba(255,255,255,.15);border:none;color:#fff;
-      font-size:30px;width:44px;height:64px;border-radius:8px;cursor:pointer;z-index:9001}
+      font-size:30px;width:44px;height:64px;border-radius:8px;
+      cursor:pointer;z-index:9001;-webkit-tap-highlight-color:transparent;}
     #lb-prev{left:8px}#lb-next{right:8px}
     #lb-dots{display:flex;gap:8px;margin-top:14px;justify-content:center}
     .lb-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);
       border:none;cursor:pointer;padding:0;transition:background .15s,transform .15s}
     .lb-dot.active{background:#fff;transform:scale(1.3)}
     #lb-counter{color:rgba(255,255,255,.55);font-size:12px;font-family:monospace;margin-top:8px}
-    #lb-hint{color:rgba(255,255,255,.35);font-size:11px;font-family:monospace;margin-top:5px}`;
+    #lb-hint{color:rgba(255,255,255,.35);font-size:11px;font-family:monospace;margin-top:5px}
+    #lb-zoom-level{color:rgba(255,255,255,.45);font-size:10px;font-family:monospace;margin-top:3px}`;
   document.head.appendChild(style);
+
   const lb=document.createElement('div');
   lb.id='tcm-lightbox';lb.setAttribute('role','dialog');lb.setAttribute('aria-modal','true');
-  lb.innerHTML=`<button id="lb-close" aria-label="Close">✕</button>
+  lb.innerHTML=`
+    <div id="lb-toolbar">
+      <button id="lb-close" aria-label="Close">✕</button>
+      <div id="lb-tools">
+        <button id="lb-zoom-out" aria-label="Zoom out" title="Zoom out">－</button>
+        <button id="lb-zoom-in"  aria-label="Zoom in"  title="Zoom in">＋</button>
+        <button id="lb-rotate"   aria-label="Rotate"   title="Rotate image">↻</button>
+      </div>
+    </div>
     <button id="lb-prev" style="display:none" aria-label="Previous">‹</button>
     <div id="lb-img-wrap"><img id="lb-img" src="" alt="Product photo"/></div>
     <button id="lb-next" style="display:none" aria-label="Next">›</button>
-    <div id="lb-dots"></div><div id="lb-counter"></div><div id="lb-hint"></div>`;
+    <div id="lb-dots"></div>
+    <div id="lb-counter"></div>
+    <div id="lb-zoom-level"></div>
+    <div id="lb-hint"></div>`;
   document.body.appendChild(lb);
+
   lb.addEventListener('click',e=>{ if(e.target===lb) closeLightbox(); });
   $('lb-close').addEventListener('click',closeLightbox);
   $('lb-prev').addEventListener('click',e=>{ e.stopPropagation(); lbGo(lbIndex-1); });
   $('lb-next').addEventListener('click',e=>{ e.stopPropagation(); lbGo(lbIndex+1); });
+
+  // Rotate
+  $('lb-rotate').addEventListener('click',e=>{
+    e.stopPropagation();
+    lbRotation=(lbRotation+90)%360;
+    lbApplyTransform();
+  });
+
+  // Zoom
+  $('lb-zoom-in').addEventListener('click',e=>{
+    e.stopPropagation();
+    lbZoom=Math.min(3,parseFloat((lbZoom+0.25).toFixed(2)));
+    lbApplyTransform();
+  });
+  $('lb-zoom-out').addEventListener('click',e=>{
+    e.stopPropagation();
+    lbZoom=Math.max(0.5,parseFloat((lbZoom-0.25).toFixed(2)));
+    lbApplyTransform();
+  });
+
+  // Keyboard
   document.addEventListener('keydown',e=>{
     if(!$('tcm-lightbox').classList.contains('open')) return;
     if(e.key==='Escape') closeLightbox();
     if(e.key==='ArrowLeft') lbGo(lbIndex-1);
     if(e.key==='ArrowRight') lbGo(lbIndex+1);
+    if(e.key==='+') { lbZoom=Math.min(3,lbZoom+0.25); lbApplyTransform(); }
+    if(e.key==='-') { lbZoom=Math.max(0.5,lbZoom-0.25); lbApplyTransform(); }
+    if(e.key==='r') { lbRotation=(lbRotation+90)%360; lbApplyTransform(); }
   });
+
+  // Touch swipe
   const wrap=$('lb-img-wrap');
   wrap.addEventListener('touchstart',e=>{ lbTouchStartX=e.touches[0].clientX; },{passive:true});
   wrap.addEventListener('touchend',e=>{
@@ -574,10 +631,19 @@ function buildLightbox(){
   });
 }
 
+function lbApplyTransform(){
+  const img=$('lb-img');
+  if(!img) return;
+  img.style.transform=`rotate(${lbRotation}deg) scale(${lbZoom})`;
+  const zl=$('lb-zoom-level');
+  if(zl) zl.textContent=lbZoom!==1?`${Math.round(lbZoom*100)}%`:'';
+}
+
 function openLightbox(images,startIndex=0){
   buildLightbox();
   lbImages=Array.isArray(images)?images:[images];
   lbIndex=startIndex;
+  lbRotation=0; lbZoom=1;
   $('tcm-lightbox').classList.add('open');
   document.body.style.overflow='hidden';
   lbRender();
@@ -589,6 +655,8 @@ function closeLightbox(){
 function lbGo(idx){
   if(lbImages.length<2) return;
   lbIndex=(idx+lbImages.length)%lbImages.length;
+  lbRotation=0; lbZoom=1;
+  lbApplyTransform();
   lbRender();
 }
 function lbRender(){
@@ -616,6 +684,57 @@ function initLightbox(){
 function escAttr(s){ return s.replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
 
 /* ══════════════════════════════════════════
+   HERO SLIDESHOW
+══════════════════════════════════════════ */
+function initSlideshow(){
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.querySelectorAll('.slide-dot');
+  if(!slides.length) return;
+
+  let current = 0;
+  let timer   = null;
+
+  function goTo(idx){
+    slides[current].classList.remove('active');
+    dots[current]?.classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current]?.classList.add('active');
+  }
+
+  function next(){ goTo(current + 1); }
+  function prev(){ goTo(current - 1); }
+
+  function startAuto(){
+    clearInterval(timer);
+    timer = setInterval(next, 4000);
+  }
+  function pauseAuto(){ clearInterval(timer); }
+
+  $('slide-next')?.addEventListener('click', ()=>{ next(); startAuto(); });
+  $('slide-prev')?.addEventListener('click', ()=>{ prev(); startAuto(); });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', ()=>{ goTo(i); startAuto(); });
+  });
+
+  // Pause on hover
+  const track = $('slides-track');
+  track?.addEventListener('mouseenter', pauseAuto);
+  track?.addEventListener('mouseleave', startAuto);
+
+  // Touch swipe on slideshow
+  let touchStartX = 0;
+  track?.addEventListener('touchstart', e=>{ touchStartX=e.touches[0].clientX; },{passive:true});
+  track?.addEventListener('touchend', e=>{
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if(Math.abs(dx)>40){ dx<0?next():prev(); startAuto(); }
+  });
+
+  startAuto();
+}
+
+/* ══════════════════════════════════════════
    BOOT
 ══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded',()=>{
@@ -631,4 +750,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   initFloatingWA();
   initInsights();
   initLightbox();
+  initSlideshow();
 });
