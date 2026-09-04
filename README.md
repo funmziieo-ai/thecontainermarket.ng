@@ -44,7 +44,7 @@ thecontainermarket/
 Open `app.js` line 10:
 
 ```js
-whatsappNumber: '2348000000000',
+whatsappNumber: '2349052352101',
 ```
 
 Replace with your real number (international format, no `+` or spaces).
